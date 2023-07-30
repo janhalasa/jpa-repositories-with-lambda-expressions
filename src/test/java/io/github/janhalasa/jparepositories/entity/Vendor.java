@@ -1,6 +1,6 @@
-package com.halasa.criterialambda.entity;
+package io.github.janhalasa.jparepositories.entity;
 
-import com.halasa.criterialambda.model.VersionAware;
+import io.github.janhalasa.jparepositories.model.VersionAware;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

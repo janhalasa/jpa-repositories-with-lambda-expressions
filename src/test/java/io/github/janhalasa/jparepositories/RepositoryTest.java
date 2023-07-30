@@ -1,10 +1,10 @@
-package com.halasa.criterialambda;
+package io.github.janhalasa.jparepositories;
 
-import com.halasa.criterialambda.entity.Car;
-import com.halasa.criterialambda.entity.CarModel;
-import com.halasa.criterialambda.entity.Vendor;
-import com.halasa.criterialambda.repository.CarRepository;
-import com.halasa.criterialambda.repository.VendorRepository;
+import io.github.janhalasa.jparepositories.entity.Car;
+import io.github.janhalasa.jparepositories.entity.CarModel;
+import io.github.janhalasa.jparepositories.entity.Vendor;
+import io.github.janhalasa.jparepositories.repository.CarRepository;
+import io.github.janhalasa.jparepositories.repository.VendorRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

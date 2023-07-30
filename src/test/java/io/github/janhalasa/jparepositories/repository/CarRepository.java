@@ -1,10 +1,10 @@
-package com.halasa.criterialambda.repository;
+package io.github.janhalasa.jparepositories.repository;
 
-import com.halasa.criterialambda.ReadPersistRepository;
-import com.halasa.criterialambda.entity.Car;
-import com.halasa.criterialambda.entity.CarModel_;
-import com.halasa.criterialambda.entity.Car_;
-import com.halasa.criterialambda.entity.Vendor;
+import io.github.janhalasa.jparepositories.ReadPersistRepository;
+import io.github.janhalasa.jparepositories.entity.Car;
+import io.github.janhalasa.jparepositories.entity.CarModel_;
+import io.github.janhalasa.jparepositories.entity.Car_;
+import io.github.janhalasa.jparepositories.entity.Vendor;
 
 import javax.persistence.EntityManager;
 import java.util.List;

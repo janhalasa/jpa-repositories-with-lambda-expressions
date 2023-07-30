@@ -1,4 +1,4 @@
-package com.halasa.criterialambda.entity;
+package io.github.janhalasa.jparepositories.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;

@@ -1,4 +1,4 @@
-package com.halasa.criterialambda;
+package io.github.janhalasa.jparepositories;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.SingularAttribute;

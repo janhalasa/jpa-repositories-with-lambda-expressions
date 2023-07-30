@@ -1,4 +1,4 @@
-package com.halasa.criterialambda;
+package io.github.janhalasa.jparepositories;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityGraph;

@@ -1,6 +1,6 @@
-package com.halasa.criterialambda;
+package io.github.janhalasa.jparepositories;
 
-import com.halasa.criterialambda.model.PredicateBuilder;
+import io.github.janhalasa.jparepositories.model.PredicateBuilder;
 
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.SingularAttribute;

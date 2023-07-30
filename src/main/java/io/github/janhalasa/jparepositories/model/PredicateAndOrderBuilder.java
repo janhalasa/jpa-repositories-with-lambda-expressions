@@ -1,4 +1,4 @@
-package com.halasa.criterialambda.model;
+package io.github.janhalasa.jparepositories.model;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.Root;

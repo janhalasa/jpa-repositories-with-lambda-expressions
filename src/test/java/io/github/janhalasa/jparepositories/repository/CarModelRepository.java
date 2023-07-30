@@ -1,8 +1,8 @@
-package com.halasa.criterialambda.repository;
+package io.github.janhalasa.jparepositories.repository;
 
-import com.halasa.criterialambda.CrudRepository;
-import com.halasa.criterialambda.entity.CarModel;
-import com.halasa.criterialambda.entity.CarModel_;
+import io.github.janhalasa.jparepositories.CrudRepository;
+import io.github.janhalasa.jparepositories.entity.CarModel;
+import io.github.janhalasa.jparepositories.entity.CarModel_;
 
 import javax.persistence.EntityManager;
 

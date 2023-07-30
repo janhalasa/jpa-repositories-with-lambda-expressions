@@ -1,10 +1,10 @@
-package com.halasa.criterialambda;
+package io.github.janhalasa.jparepositories;
 
-import com.halasa.criterialambda.model.OrderBy;
-import com.halasa.criterialambda.model.PredicateAndOrder;
-import com.halasa.criterialambda.model.PredicateAndOrderBuilder;
-import com.halasa.criterialambda.model.PredicateBuilder;
-import com.halasa.criterialambda.model.QueryBuilder;
+import io.github.janhalasa.jparepositories.model.OrderBy;
+import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
+import io.github.janhalasa.jparepositories.model.PredicateAndOrderBuilder;
+import io.github.janhalasa.jparepositories.model.PredicateBuilder;
+import io.github.janhalasa.jparepositories.model.QueryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
