@@ -4,7 +4,7 @@
 
 	<groupId>io.github.janhalasa</groupId>
 	<artifactId>jpa-repositories-with-lambda-expressions</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>JpaCriteriaWithLambdaExpressions</name>
@@ -102,6 +102,11 @@
 			<id>ossrh</id>
 			<url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
 		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<name>Central Repository OSSRH</name>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
 	</distributionManagement>
 
 	<build>
