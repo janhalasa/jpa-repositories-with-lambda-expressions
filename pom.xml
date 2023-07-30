@@ -4,7 +4,7 @@
 
 	<groupId>io.github.janhalasa</groupId>
 	<artifactId>jpa-repositories-with-lambda-expressions</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>JPA repositories with lambda expressions</name>
@@ -45,7 +45,7 @@
 	<scm>
 		<connection>scm:git:${repository.url}</connection>
 		<developerConnection>scm:git:${repository.url}</developerConnection>
-		<tag>jpa-repositories-with-lambda-expressions-0.1.1</tag>
+		<tag>HEAD</tag>
 		<url>${repository.url}</url>
 	</scm>
 	
