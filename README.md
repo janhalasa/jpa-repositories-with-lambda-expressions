@@ -12,7 +12,7 @@ Add the library as a Maven dependency:
 ```xml
 <dependency>
     <artifactId>jpa-repositories-with-lambda-expressions</artifactId>
-    <groupId>com.halasa</groupId>
+    <groupId>io.github.halasa</groupId>
     <version>0.7.0</version>
 </dependency>
 ```
