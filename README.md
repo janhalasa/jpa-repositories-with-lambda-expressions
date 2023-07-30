@@ -30,15 +30,16 @@ To create a repository class, extend one of the provided repositories:
 
 #### Optional result ####
 
-Examples:
  ```java
-getWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
+Optional<E> optionalEntity = getWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 ```
 
 #### Required result ####
 
+If no result is found, `javax.persistence.NoResultException` is thrown.
+
 ```java
-loadWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
+E Entity = loadWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 ```
 
 ### Multiple ###
@@ -47,9 +48,8 @@ loadWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 
 Methods starting with find. They always return a list of entities.
 
-Example:
 ```java
-findWhere(
+List<E> entities = findWhere(
     (cb, root) -> cb.and(
         cb.equal(root.join(Car_.model).get(CarModel_.vendor), vendor),
         cb.equal(root.get(Car_.color), color))
@@ -59,8 +59,9 @@ findWhere(
 #### Ordering ####
 
 Ordering is supported by the find methods using `OrderBy` class which doesn't depend on `EntityManager`:
+
 ```java
-findWhereOrdered(
+List<E> entities =  findWhereOrdered(
     (cb, root) -> new PredicateAndOrder(
         cb.like(root.get(Vendor_.name), "%" + namePattern + "%"),
         List.of(OrderBy.asc(root.get(Vendor_.name))))
@@ -72,7 +73,7 @@ findWhereOrdered(
 Pagination requires an order (a stable one) to work and page properties - number and size:
 
 ```java
-pageWhere(
+ResultPage<E> page = pageWhere(
     (cb, root) -> new PredicateAndOrder(
         cb.like(root.get(Vendor_.name), "%a%"),
         List.of(OrderBy.asc(
@@ -95,7 +96,7 @@ So JPA initializes all assotiations from the given entity graph and assotiations
 
 ```java
 findWhere(
-        (cb, root) -> cb.like(root.get(Vendor_.name), "%" + namePattern + "%"),
+        (cb, root) -> cb.equal(root.get(Vendor_.name), searchedName),
         createEntityGraph(List.of(Vendor_.models)));
 ```
 
@@ -104,7 +105,6 @@ findWhere(
 `BasicRepository` supports basic persist, merge and remove methods analogous to the ones from the JPA `EntityManager`.
 It also supports removal of multiple entities by `BasicRepository::removeWhere`.
 
-Example:
 ```java
 removeWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 ```
@@ -114,4 +114,10 @@ removeWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 The library supports optimistic locking by a possibility to load an entity by its primary key and a version.
 The intended use case is: A service gets a primary key and a version from and tries to load the corresponding entity. 
 If the version of the entity has changed the `VersionAwareCrudRepository::loadByPk(pk, expectedVersion)` will throw
-an `OptimisticLockException`.
+an `javax.persistence.OptimisticLockException`.
+
+```java
+E entity = loadByPk(pk, expectedVersion);
+// ... modify entity
+// modifications will be saved on transaction commit
+```
