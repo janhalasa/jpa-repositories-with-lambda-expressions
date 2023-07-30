@@ -8,6 +8,7 @@
 	<packaging>jar</packaging>
 
 	<name>JPA repositories with lambda expressions</name>
+	<description>Lambda expression support for JPA (Java persistence API) Criteria API repositories</description>
 	<url>https://github.com/janhalasa/jpa-repositories-with-lambda-expressions</url>
 	<inceptionYear>2023</inceptionYear>
 	<developers>
