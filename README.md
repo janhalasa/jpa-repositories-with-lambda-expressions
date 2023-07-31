@@ -13,7 +13,7 @@ Add the library as a Maven dependency:
 <dependency>
     <artifactId>jpa-repositories-with-lambda-expressions</artifactId>
     <groupId>io.github.janhalasa</groupId>
-    <version>0.7.0</version>
+    <version>0.7.1</version>
 </dependency>
 ```
 To create a repository class, extend one of the provided repositories:
@@ -23,7 +23,17 @@ To create a repository class, extend one of the provided repositories:
 * `ReadPersistRepository` - extends `ReadPersistRepository` and makes the `persist` method public. Intended for repositories that don't support updating or removing of entities.
 * `CrudRepository` - extends `ReadPersistRepository` and makes `merge` nad `remove` methods public.
 * `VersionAwareCrudRepository` - extends `CrudRepository` and adds load methods with an extra `expectedVersion` parameter.
- 
+
+Example:
+```java
+public class CarRepository extends CrudRepository<Car, Long> {
+    public CarRepository(EntityManager em) {
+        super(em, Car.class, Car_.id);
+    }
+    // ... custom repository methods
+}
+```
+
 ## Querying ##
 
 ### Single ####
