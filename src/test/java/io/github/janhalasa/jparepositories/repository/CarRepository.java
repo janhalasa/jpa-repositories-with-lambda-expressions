@@ -17,7 +17,7 @@ import java.util.Optional;
 public class CarRepository extends ReadPersistRepository<Car, Long> {
 	
 	public CarRepository(EntityManager em) {
-		super(em, CarRepository.class, Car.class, Car_.id);
+		super(em, Car.class, Car_.id);
 	}
 	
 	public List<Car> findByVendorAndColor(Vendor vendor, String color) {

@@ -16,10 +16,9 @@ public class CrudRepository<T, P> extends ReadPersistRepository<T, P> {
 
     protected CrudRepository(
             EntityManager em,
-            Class<? extends CrudRepository<T, P>> repositoryClass,
             Class<T> entityClass,
             SingularAttribute<T, P> pkField) {
-        super(em, repositoryClass, entityClass, pkField);
+        super(em, entityClass, pkField);
     }
 
     public T merge(T entity) {

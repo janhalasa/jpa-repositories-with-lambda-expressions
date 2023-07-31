@@ -19,10 +19,9 @@ public abstract class VersionAwareCrudRepository<T extends VersionAware, P> exte
 
     protected VersionAwareCrudRepository(
             EntityManager em,
-            Class<? extends VersionAwareCrudRepository<T, P>> repositoryClass,
             Class<T> entityClass,
             SingularAttribute<T, P> pkField) {
-        super(em, repositoryClass, entityClass, pkField);
+        super(em, entityClass, pkField);
     }
 
     public T loadByPk(P pk, Integer expectedVersion) {

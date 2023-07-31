@@ -5,8 +5,6 @@ import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrderBuilder;
 import io.github.janhalasa.jparepositories.model.PredicateBuilder;
 import io.github.janhalasa.jparepositories.model.QueryBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
@@ -39,7 +37,6 @@ public abstract class BasicRepository<T, P> {
 
 	private Class<T> entityClass;
 	private String entityName;
-	private Logger logger;
 	private SingularAttribute<T, P> pkField;
 
 	private EntityManager em;
@@ -53,18 +50,12 @@ public abstract class BasicRepository<T, P> {
 
 	protected BasicRepository(
 			EntityManager em,
-			Class<? extends BasicRepository<T, P>> repositoryClass,
 			Class<T> entityClass,
 			SingularAttribute<T, P> pkField) {
 		this.em = em;
 		this.entityClass = entityClass;
 		this.entityName = JpaUtils.getEntityName(entityClass);
-		this.logger = LoggerFactory.getLogger(repositoryClass.getName());
 		this.pkField = pkField;
-	}
-
-	protected Logger logger() {
-		return this.logger;
 	}
 
 	protected EntityManager em() {

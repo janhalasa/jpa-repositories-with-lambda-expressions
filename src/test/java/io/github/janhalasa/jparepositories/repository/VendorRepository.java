@@ -17,7 +17,7 @@ import java.util.List;
 public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 	
 	public VendorRepository(EntityManager em) {
-		super(em, VendorRepository.class, Vendor.class, Vendor_.id);
+		super(em, Vendor.class, Vendor_.id);
 	}
 
 	public ResultPage<Vendor> pageWhereNameContainsA(int pageNumber, int pageSize) {

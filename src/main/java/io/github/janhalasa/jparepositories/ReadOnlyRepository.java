@@ -17,10 +17,9 @@ public class ReadOnlyRepository<T, P> extends BasicRepository<T, P> {
 
     protected ReadOnlyRepository(
             EntityManager em,
-            Class<? extends ReadOnlyRepository<T, P>> repositoryClass,
             Class<T> entityClass,
             SingularAttribute<T, P> pkField) {
-        super(em, repositoryClass, entityClass, pkField);
+        super(em, entityClass, pkField);
     }
 
     public Optional<T> getByPk(P pkValue) {

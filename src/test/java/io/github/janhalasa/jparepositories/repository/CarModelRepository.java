@@ -13,6 +13,6 @@ import javax.persistence.EntityManager;
 public class CarModelRepository extends CrudRepository<CarModel, Long> {
 	
 	public CarModelRepository(EntityManager em) {
-		super(em, CarModelRepository.class, CarModel.class, CarModel_.id);
+		super(em, CarModel.class, CarModel_.id);
 	}
 }
