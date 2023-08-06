@@ -284,10 +284,16 @@ public abstract class BasicRepository<T, P> {
 	}
 
 	protected long countWhere(PredicateBuilder<T> predicateBuilder) {
+		return countWhere(predicateBuilder, false);
+	}
+
+	protected long countWhere(
+			PredicateBuilder<T> predicateBuilder,
+			boolean distinct) {
 		CriteriaBuilder cb = em().getCriteriaBuilder();
 		CriteriaQuery<Long> q = cb.createQuery(Long.class);
 		Root<T> root = q.from(entityClass);
-		CriteriaQuery<Long> criteriaQuery = q.select(cb.count(root));
+		CriteriaQuery<Long> criteriaQuery = q.select(distinct ? cb.countDistinct(root) : cb.count(root));
 		final Predicate predicate = predicateBuilder.build(cb, root);
 		if (predicate != null) {
 			criteriaQuery = criteriaQuery.where(predicate);
@@ -299,7 +305,32 @@ public abstract class BasicRepository<T, P> {
 	protected ResultPage<T> pageWhere(
 			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
 			int pageNumber,
+			int pageSize) {
+		return pageWhere(
+				predicateAndOrderBuilder,
+				pageNumber,
+				pageSize,
+				null);
+	}
+
+	protected ResultPage<T> pageWhere(
+			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
+			int pageNumber,
 			int pageSize,
+			EntityGraph<T> entityLoadGraph) {
+		return pageWhere(
+				predicateAndOrderBuilder,
+				pageNumber,
+				pageSize,
+				false,
+				entityLoadGraph);
+	}
+
+	protected ResultPage<T> pageWhere(
+			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
+			int pageNumber,
+			int pageSize,
+			boolean distinct,
 			EntityGraph<T> entityLoadGraph) {
 
 		if (predicateAndOrderBuilder == null) {
@@ -314,6 +345,7 @@ public abstract class BasicRepository<T, P> {
 
 		final TypedQuery<T> typedQuery = createTypedQuery(
 				(cb, root, query) -> {
+					query.distinct(distinct);
 					final PredicateAndOrder predicateAndOrder = predicateAndOrderBuilder.build(cb, root);
 					if (predicateAndOrder.getPredicate() != null) {
 						query.where(predicateAndOrder.getPredicate());
@@ -332,20 +364,11 @@ public abstract class BasicRepository<T, P> {
 				.setMaxResults(pageSize)
 				.getResultList();
 
-		final long totalCount = this.countWhere((cb, root) -> predicateAndOrderBuilder.build(cb, root).getPredicate());
+		final long totalCount = this.countWhere(
+				(cb, root) -> predicateAndOrderBuilder.build(cb, root).getPredicate(),
+				distinct);
 
 		return new ResultPage<>(totalCount, pageNumber, pageSize, resultList);
-	}
-
-	protected ResultPage<T> pageWhere(
-			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
-			int pageNumber,
-			int pageSize) {
-		return pageWhere(
-				predicateAndOrderBuilder,
-				pageNumber,
-				pageSize,
-				null);
 	}
 
 	protected void persist(T entity) {

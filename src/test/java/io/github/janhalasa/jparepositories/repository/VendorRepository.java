@@ -31,6 +31,7 @@ public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 				),
 				pageNumber,
 				pageSize,
+				true,
 				createEntityGraph(List.of(Vendor_.models)));
 	}
 
