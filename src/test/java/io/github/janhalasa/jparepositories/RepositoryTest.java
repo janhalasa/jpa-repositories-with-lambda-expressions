@@ -17,7 +17,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnitUtil;
 import java.util.List;
 import java.util.Optional;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 /**
@@ -25,8 +24,7 @@ import java.util.stream.Collectors;
  * @author janhalasa
  */
 public class RepositoryTest {
-	
-	private static final Logger LOGGER = Logger.getLogger(RepositoryTest.class.getName());
+
 	private static final String RENAULT = "Renault";
 
 	private EntityManager em;
