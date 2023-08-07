@@ -101,13 +101,13 @@ but this functionality is not there at the moment.
 
 ### Lazy assotiation loading ###
 
-The API supports lazy assotiation loading using entity graphs. The entity graphs are used as `javax.persistence.loadgraph` (as oposed to `javax.persistence.fetchgraph`).
-So JPA initializes all assotiations from the given entity graph and assotiations configured as `FetchType.EAGER` in annotations on entity attributes.
+The API supports lazy assotiation loading using entity graphs. Both `javax.persistence.loadgraph` and `javax.persistence.fetchgraph`)
+are supported by methods with more explicit naming `ResultGraph.specifiedAssociationsOnly` and `ResultGraph.specifiedAndEagerAssociations`.
 
 ```java
 findWhere(
         (cb, root) -> cb.equal(root.get(Vendor_.name), searchedName),
-        createEntityGraph(List.of(Vendor_.models)));
+        ResultGraph.specifiedAssociationsOnly(createEntityGraph(List.of(Vendor_.models))));
 ```
 
 ## Modifications ##
