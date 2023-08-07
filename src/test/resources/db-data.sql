@@ -25,3 +25,6 @@ INSERT INTO Car (id, model_id, color) VALUES (3, 1, 'blue');
 INSERT INTO Car (id, model_id, color) VALUES (4, 2, 'blue');
 INSERT INTO Car (id, model_id, color) VALUES (5, 2, 'green');
 INSERT INTO Car (id, model_id, color) VALUES (6, 3, 'green');
+
+INSERT INTO ManufacturingPlant (id, name, country) VALUES (1, 'RENAULT-MP1', 'France');
+INSERT INTO ManufacturingPlant (id, name, country) VALUES (1, 'RENAULT-MP2', 'Croatia');

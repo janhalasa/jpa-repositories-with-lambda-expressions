@@ -1,6 +1,7 @@
 package io.github.janhalasa.jparepositories;
 
-import javax.persistence.EntityGraph;
+import io.github.janhalasa.jparepositories.model.ResultGraph;
+
 import javax.persistence.EntityManager;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
@@ -26,23 +27,23 @@ public class ReadOnlyRepository<T, P> extends BasicRepository<T, P> {
         return super.getByPk(pkValue);
     }
 
-    public Optional<T> getByPk(P pkValue, EntityGraph<T> entityLoadGraph) {
-        return super.getByPk(pkValue, entityLoadGraph);
+    public Optional<T> getByPk(P pkValue, ResultGraph<T> resultGraph) {
+        return super.getByPk(pkValue, resultGraph);
     }
 
     public T loadByPk(P pkValue) {
         return super.loadByPk(pkValue);
     }
 
-    public T loadByPk(P pkValue, EntityGraph<T> entityLoadGraph) {
-        return super.loadByPk(pkValue, entityLoadGraph);
+    public T loadByPk(P pkValue, ResultGraph<T> resultGraph) {
+        return super.loadByPk(pkValue, resultGraph);
     }
 
     public List<T> findAll() {
         return super.findAll();
     }
 
-    public List<T> findAll(EntityGraph<T> entityLoadGraph) {
-        return super.findAll(entityLoadGraph);
+    public List<T> findAll(ResultGraph<T> resultGraph) {
+        return super.findAll(resultGraph);
     }
 }

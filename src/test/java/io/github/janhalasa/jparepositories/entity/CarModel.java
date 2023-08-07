@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -21,12 +21,12 @@ public class CarModel {
 	
 	private String name;
 	
-	@ManyToOne()
+	@ManyToOne
 	private Vendor vendor;
 	
 	@OneToMany
 	@JoinColumn(name="carmodel_id", nullable=true)
-	private List<Car> cars;
+	private Set<Car> cars;
 
 	public CarModel() {
 	}
@@ -60,11 +60,11 @@ public class CarModel {
 		this.vendor = vendor;
 	}
 
-	public List<Car> getCars() {
+	public Set<Car> getCars() {
 		return cars;
 	}
 
-	public void setCars(List<Car> cars) {
+	public void setCars(Set<Car> cars) {
 		this.cars = cars;
 	}
 

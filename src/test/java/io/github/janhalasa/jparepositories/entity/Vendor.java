@@ -3,12 +3,13 @@ package io.github.janhalasa.jparepositories.entity;
 import io.github.janhalasa.jparepositories.model.VersionAware;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Version;
-import java.util.List;
+import java.util.Set;
 
 /**
  *
@@ -28,7 +29,11 @@ public class Vendor implements VersionAware {
 
 	@OneToMany()
 	@JoinColumn(name="vendor_id", nullable=true)
-	private List<CarModel> models;
+	private Set<CarModel> models;
+
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name="vendor_id")
+	private Set<ManufacturingPlant> manufacturingPlants;
 
 	public Vendor() {
 	}
@@ -53,12 +58,20 @@ public class Vendor implements VersionAware {
 		this.name = name;
 	}
 
-	public List<CarModel> getModels() {
+	public Set<CarModel> getModels() {
 		return models;
 	}
 
-	public void setModels(List<CarModel> models) {
+	public void setModels(Set<CarModel> models) {
 		this.models = models;
+	}
+
+	public Set<ManufacturingPlant> getManufacturingPlants() {
+		return manufacturingPlants;
+	}
+
+	public void setManufacturingPlants(Set<ManufacturingPlant> manufacturingPlants) {
+		this.manufacturingPlants = manufacturingPlants;
 	}
 
 	@Override

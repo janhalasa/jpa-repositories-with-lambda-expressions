@@ -6,6 +6,7 @@ import io.github.janhalasa.jparepositories.entity.Vendor;
 import io.github.janhalasa.jparepositories.entity.Vendor_;
 import io.github.janhalasa.jparepositories.model.OrderBy;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
+import io.github.janhalasa.jparepositories.model.ResultGraph;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -32,7 +33,7 @@ public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 				pageNumber,
 				pageSize,
 				true,
-				createEntityGraph(List.of(Vendor_.models)));
+				ResultGraph.specifiedAssociationsOnly(createEntityGraph(List.of(Vendor_.models))));
 	}
 
 	public Vendor loadByName(String name) {
@@ -44,6 +45,14 @@ public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 				(cb, root) -> new PredicateAndOrder(
 					cb.like(root.get(Vendor_.name), "%" + namePattern + "%"),
 					List.of(OrderBy.asc(root.get(Vendor_.name))
-				)), createEntityGraph(List.of(Vendor_.models)));
+				)), ResultGraph.specifiedAndEagerAssociations(createEntityGraph(List.of(Vendor_.models))));
+	}
+
+	public Vendor loadWithModelsAndWithoutManufacturingPlants(Long vendorId) {
+		return loadByPk(vendorId, ResultGraph.specifiedAssociationsOnly(createEntityGraph(List.of(Vendor_.models))));
+	}
+
+	public Vendor loadWithModelsAndManufacturingPlants(Long vendorId) {
+		return loadByPk(vendorId, ResultGraph.specifiedAndEagerAssociations(createEntityGraph(List.of(Vendor_.models))));
 	}
 }

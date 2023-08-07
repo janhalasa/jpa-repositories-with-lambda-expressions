@@ -1,8 +1,8 @@
 package io.github.janhalasa.jparepositories;
 
+import io.github.janhalasa.jparepositories.model.ResultGraph;
 import io.github.janhalasa.jparepositories.model.VersionAware;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.OptimisticLockException;
 import javax.persistence.metamodel.SingularAttribute;
@@ -28,16 +28,16 @@ public abstract class VersionAwareCrudRepository<T extends VersionAware, P> exte
         return this.loadByPkAndVersion(pk, expectedVersion, null);
     }
 
-    public T loadByPk(P pk, Integer expectedVersion, EntityGraph<T> entityLoadGraph) {
-        return this.loadByPkAndVersion(pk, expectedVersion, entityLoadGraph);
+    public T loadByPk(P pk, Integer expectedVersion, ResultGraph<T> resultGraph) {
+        return this.loadByPkAndVersion(pk, expectedVersion, resultGraph);
     }
 
-    private T loadByPkAndVersion(P pk, Integer expectedVersion, EntityGraph<T> entityLoadGraph) {
+    private T loadByPkAndVersion(P pk, Integer expectedVersion, ResultGraph<T> resultGraph) {
         Objects.requireNonNull(pk);
         Objects.requireNonNull(expectedVersion);
-        final T entity = entityLoadGraph == null
+        final T entity = resultGraph == null
                 ? this.loadByPk(pk)
-                : this.loadByPk(pk, entityLoadGraph);
+                : this.loadByPk(pk, resultGraph);
         if (!Objects.equals(entity.getVersion(), expectedVersion)) {
             throw new OptimisticLockException("Required entity has been modified in a different transaction " +
                     "(expected version: " + expectedVersion + ", actual version: " + entity.getVersion() + ")");

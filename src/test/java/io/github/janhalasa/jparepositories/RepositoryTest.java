@@ -3,6 +3,7 @@ package io.github.janhalasa.jparepositories;
 import io.github.janhalasa.jparepositories.entity.Car;
 import io.github.janhalasa.jparepositories.entity.CarModel;
 import io.github.janhalasa.jparepositories.entity.Vendor;
+import io.github.janhalasa.jparepositories.repository.CarModelRepository;
 import io.github.janhalasa.jparepositories.repository.CarRepository;
 import io.github.janhalasa.jparepositories.repository.VendorRepository;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +18,12 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceUnitUtil;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -31,6 +37,7 @@ public class RepositoryTest {
 	private PersistenceUnitUtil unitUtil;
 
 	private VendorRepository vendorRepository;
+	private CarModelRepository carModelRepository;
 	private CarRepository carRepository;
 
 	@BeforeEach
@@ -41,6 +48,7 @@ public class RepositoryTest {
 			this.unitUtil = em.getEntityManagerFactory().getPersistenceUnitUtil();
 
 			this.vendorRepository = new VendorRepository(this.em);
+			this.carModelRepository = new CarModelRepository(this.em);
 			this.carRepository = new CarRepository(this.em);
 		}
 	}
@@ -52,20 +60,34 @@ public class RepositoryTest {
 			final int pageSize = 7;
 
 			Vendor vendor = vendorRepository.loadByName(RENAULT);
-			Assertions.assertFalse(unitUtil.isLoaded(vendor.getModels()));
-			List<CarModel> models = vendor.getModels();
-			Assertions.assertEquals(3, models.size());
+			assertFalse(unitUtil.isLoaded(vendor.getModels()));
+			Set<CarModel> models = vendor.getModels();
+			assertEquals(3, models.size());
 
 			final ResultPage<Vendor> vendorResultPage = vendorRepository.pageWhereNameContainsA(pageNumber, pageSize);
-			Assertions.assertEquals(11, vendorResultPage.getTotalCount());
-			Assertions.assertEquals(pageNumber, vendorResultPage.getPageNumber());
-			Assertions.assertEquals(pageSize, vendorResultPage.getPageSize());
-			Assertions.assertEquals(pageSize, vendorResultPage.getResults().size());
+			assertEquals(11, vendorResultPage.getTotalCount());
+			assertEquals(pageNumber, vendorResultPage.getPageNumber());
+			assertEquals(pageSize, vendorResultPage.getPageSize());
+			assertEquals(pageSize, vendorResultPage.getResults().size());
 
 			vendorResultPage.getResults().forEach(vendorFromPage -> {
-				Assertions.assertTrue(unitUtil.isLoaded(vendorFromPage.getModels()));
+				assertTrue(unitUtil.isLoaded(vendorFromPage.getModels()));
 			});
 		});
+	}
+
+	@Test
+	void fetchGraphIgnoresEagerAssociations() {
+		Vendor vendor = this.vendorRepository.loadWithModelsAndWithoutManufacturingPlants(1000L);
+		assertTrue(unitUtil.isLoaded(vendor.getModels()));
+		assertFalse(unitUtil.isLoaded(vendor.getManufacturingPlants()));
+	}
+
+	@Test
+	void loadGraphIncludesEagerAssociations() {
+		Vendor vendor = this.vendorRepository.loadWithModelsAndManufacturingPlants(1000L);
+		assertTrue(unitUtil.isLoaded(vendor.getModels()));
+		assertTrue(unitUtil.isLoaded(vendor.getManufacturingPlants()));
 	}
 
 	@Test
@@ -82,10 +104,10 @@ public class RepositoryTest {
 	void testFindWhereAndOrderByWithLoadGraph() {
 		rollback(() -> {
 			List<Vendor> vendors = vendorRepository.findLikeNameOrderByNameAndFetchModels("e");
-			Assertions.assertEquals(
+			assertEquals(
 					List.of("Mercedes", "Peugeot", "Renault", "Seat", "Tesla", "Volkswagen"),
 					vendors.stream().map(Vendor::getName).collect(Collectors.toList()));
-			vendors.forEach(vendor -> Assertions.assertTrue(unitUtil.isLoaded(vendor.getModels())));
+			vendors.forEach(vendor -> assertTrue(unitUtil.isLoaded(vendor.getModels())));
 		});
 	}
 
@@ -94,7 +116,7 @@ public class RepositoryTest {
 		rollback(() -> {
 			Vendor renault = this.vendorRepository.loadByName(RENAULT);
 			List<Car> cars = this.carRepository.findByVendorAndColor(renault, "green");
-			Assertions.assertEquals(3, cars.size());
+			assertEquals(3, cars.size());
 		});
 	}
 
@@ -112,7 +134,7 @@ public class RepositoryTest {
 		rollback(() -> {
 			String color = "red";
 			Car car = this.carRepository.loadByColor(color);
-			Assertions.assertEquals(
+			assertEquals(
 					color,
 					car.getColor());
 		});
@@ -127,7 +149,7 @@ public class RepositoryTest {
 
 	@Test
 	void testGetReturnsEmptyWhenNotFound() {
-		rollback(() -> Assertions.assertEquals(
+		rollback(() -> assertEquals(
 				Optional.empty(),
 				this.carRepository.getByColor("yellowgreen")));
 	}
@@ -137,7 +159,7 @@ public class RepositoryTest {
 		rollback(() -> {
 			String color = "red";
 			Car car = this.carRepository.getByColor(color).get();
-			Assertions.assertEquals(
+			assertEquals(
 					color,
 					car.getColor());
 		});
