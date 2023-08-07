@@ -13,7 +13,7 @@ Add the library as a Maven dependency:
 <dependency>
     <artifactId>jpa-repositories-with-lambda-expressions</artifactId>
     <groupId>io.github.janhalasa</groupId>
-    <version>0.7.2</version>
+    <version>0.7.3</version>
 </dependency>
 ```
 To create a repository class, extend one of the provided repositories:
