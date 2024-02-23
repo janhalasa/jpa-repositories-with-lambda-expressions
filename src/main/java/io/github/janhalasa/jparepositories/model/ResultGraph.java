@@ -4,8 +4,8 @@ import jakarta.persistence.EntityGraph;
 
 public class ResultGraph<T> {
 
-    private static final String JAVAX_PERSISTENCE_LOADGRAPH = "javax.persistence.loadgraph";
-    private static final String JAVAX_PERSISTENCE_FETCHGRAPH = "javax.persistence.fetchgraph";
+    private static final String JAKARTA_PERSISTENCE_LOADGRAPH = "jakarta.persistence.loadgraph";
+    private static final String JAKARTA_PERSISTENCE_FETCHGRAPH = "jakarta.persistence.fetchgraph";
 
     private final EntityGraph<T> entityGraph;
     private final String type;
@@ -16,11 +16,11 @@ public class ResultGraph<T> {
     }
 
     public static <T> ResultGraph<T> specifiedAssociationsOnly(EntityGraph<T> entityGraph) {
-        return new ResultGraph<T>(entityGraph, JAVAX_PERSISTENCE_FETCHGRAPH);
+        return new ResultGraph<T>(entityGraph, JAKARTA_PERSISTENCE_FETCHGRAPH);
     }
 
     public static <T> ResultGraph<T> specifiedAndEagerAssociations(EntityGraph<T> entityGraph) {
-        return new ResultGraph<T>(entityGraph, JAVAX_PERSISTENCE_LOADGRAPH);
+        return new ResultGraph<T>(entityGraph, JAKARTA_PERSISTENCE_LOADGRAPH);
     }
 
     public EntityGraph<T> getEntityGraph() {

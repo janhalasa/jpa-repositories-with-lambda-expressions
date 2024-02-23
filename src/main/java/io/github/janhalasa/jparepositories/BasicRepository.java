@@ -34,8 +34,6 @@ import java.util.stream.Collectors;
  */
 public abstract class BasicRepository<T, P> {
 
-	public static final String JAVAX_PERSISTENCE_LOADGRAPH = "javax.persistence.loadgraph";
-
 	private Class<T> entityClass;
 	private String entityName;
 	private SingularAttribute<T, P> pkField;

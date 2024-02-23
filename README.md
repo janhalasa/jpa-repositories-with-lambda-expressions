@@ -46,7 +46,7 @@ Optional<E> optionalEntity = getWhere((cb, root) -> cb.equal(root.get(Car_.color
 
 #### Required result ####
 
-If no result is found, `javax.persistence.NoResultException` is thrown.
+If no result is found, `jakarta.persistence.NoResultException` is thrown.
 
 ```java
 E Entity = loadWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
@@ -101,7 +101,7 @@ but this functionality is not there at the moment.
 
 ### Lazy assotiation loading ###
 
-The API supports lazy assotiation loading using entity graphs. Both `javax.persistence.loadgraph` and `javax.persistence.fetchgraph`)
+The API supports lazy assotiation loading using entity graphs. Both `jakarta.persistence.loadgraph` and `jakarta.persistence.fetchgraph`)
 are supported by methods with more explicit naming `ResultGraph.specifiedAssociationsOnly` and `ResultGraph.specifiedAndEagerAssociations`.
 
 ```java
@@ -124,7 +124,7 @@ removeWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 The library supports optimistic locking by a possibility to load an entity by its primary key and a version.
 The intended use case is: A service gets a primary key and a version from and tries to load the corresponding entity. 
 If the version of the entity has changed the `VersionAwareCrudRepository::loadByPk(pk, expectedVersion)` will throw
-an `javax.persistence.OptimisticLockException`.
+an `jakarta.persistence.OptimisticLockException`.
 
 ```java
 E entity = loadByPk(pk, expectedVersion);
