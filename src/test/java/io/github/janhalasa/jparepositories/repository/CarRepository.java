@@ -5,8 +5,8 @@ import io.github.janhalasa.jparepositories.entity.Car;
 import io.github.janhalasa.jparepositories.entity.CarModel_;
 import io.github.janhalasa.jparepositories.entity.Car_;
 import io.github.janhalasa.jparepositories.entity.Vendor;
+import jakarta.persistence.EntityManager;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 

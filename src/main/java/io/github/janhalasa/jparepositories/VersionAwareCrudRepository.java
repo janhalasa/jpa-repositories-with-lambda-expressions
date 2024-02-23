@@ -2,10 +2,10 @@ package io.github.janhalasa.jparepositories;
 
 import io.github.janhalasa.jparepositories.model.ResultGraph;
 import io.github.janhalasa.jparepositories.model.VersionAware;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.metamodel.SingularAttribute;
 
-import javax.persistence.EntityManager;
-import javax.persistence.OptimisticLockException;
-import javax.persistence.metamodel.SingularAttribute;
 import java.util.Objects;
 
 public abstract class VersionAwareCrudRepository<T extends VersionAware, P> extends ReadPersistRepository<T, P> {

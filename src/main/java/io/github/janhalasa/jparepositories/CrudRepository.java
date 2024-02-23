@@ -1,9 +1,8 @@
 package io.github.janhalasa.jparepositories;
 
 import io.github.janhalasa.jparepositories.model.PredicateBuilder;
-
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 public class CrudRepository<T, P> extends ReadPersistRepository<T, P> {
 

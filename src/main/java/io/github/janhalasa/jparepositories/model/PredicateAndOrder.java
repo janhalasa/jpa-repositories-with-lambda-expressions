@@ -1,6 +1,7 @@
 package io.github.janhalasa.jparepositories.model;
 
-import javax.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Predicate;
+
 import java.util.List;
 
 public class PredicateAndOrder {

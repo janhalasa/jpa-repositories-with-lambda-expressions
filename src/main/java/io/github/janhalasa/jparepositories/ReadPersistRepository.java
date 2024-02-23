@@ -1,7 +1,7 @@
 package io.github.janhalasa.jparepositories;
 
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.SingularAttribute;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.SingularAttribute;
 
 public abstract class ReadPersistRepository<T, P> extends ReadOnlyRepository<T, P> {
 

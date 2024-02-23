@@ -1,18 +1,18 @@
 package io.github.janhalasa.jparepositories;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityGraph;
-import javax.persistence.EntityManager;
-import javax.persistence.Subgraph;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.Fetch;
-import javax.persistence.criteria.From;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Selection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EntityGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Subgraph;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Fetch;
+import jakarta.persistence.criteria.From;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.Selection;
 
 /**
  * This class was taken from (just methods needed in this project)
@@ -22,7 +22,7 @@ import javax.persistence.criteria.Selection;
  */
 public class JpaUtils {
 
-    public static final String JAVAX_PERSISTENCE_LOADGRAPH = "javax.persistence.loadgraph";
+    public static final String JAKARTA_PERSISTENCE_LOADGRAPH = "jakarta.persistence.loadgraph";
 
     private static volatile int aliasCount = 0;
 

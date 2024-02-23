@@ -3,8 +3,7 @@ package io.github.janhalasa.jparepositories.repository;
 import io.github.janhalasa.jparepositories.CrudRepository;
 import io.github.janhalasa.jparepositories.entity.CarModel;
 import io.github.janhalasa.jparepositories.entity.CarModel_;
-
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 
 /**
  *

@@ -7,8 +7,8 @@ import io.github.janhalasa.jparepositories.entity.Vendor_;
 import io.github.janhalasa.jparepositories.model.OrderBy;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
 import io.github.janhalasa.jparepositories.model.ResultGraph;
+import jakarta.persistence.EntityManager;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
 /**

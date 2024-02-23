@@ -39,8 +39,8 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<gpg.keyname>9A6E8FC7E1AB9A3056C31E9D798CB8A32207B068</gpg.keyname>
 
-		<hibernate.version>5.6.4.Final</hibernate.version>
-		<hibernate-jpamodelgen.version>5.6.4.Final</hibernate-jpamodelgen.version>
+		<hibernate.version>6.2.22.Final</hibernate.version>
+		<hibernate-jpamodelgen.version>6.2.22.Final</hibernate-jpamodelgen.version>
 	</properties>
 
 	<scm>
@@ -52,21 +52,21 @@
 	
 	<dependencies>
 		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>javax.persistence-api</artifactId>
-			<version>2.2</version>
+			<groupId>jakarta.persistence</groupId>
+			<artifactId>jakarta.persistence-api</artifactId>
+			<version>3.1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-jpamodelgen</artifactId>
 			<version>${hibernate-jpamodelgen.version}</version>
 			<scope>provided</scope>
 		</dependency>
 
 		<dependency>
-			<groupId>org.hibernate</groupId>
+			<groupId>org.hibernate.orm</groupId>
 			<artifactId>hibernate-core</artifactId>
-			<version>5.6.4.Final</version>
+			<version>${hibernate.version}</version>
 			<scope>test</scope>
 		</dependency>
 

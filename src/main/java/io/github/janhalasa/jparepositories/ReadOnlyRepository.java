@@ -1,9 +1,9 @@
 package io.github.janhalasa.jparepositories;
 
 import io.github.janhalasa.jparepositories.model.ResultGraph;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.metamodel.SingularAttribute;
 
-import javax.persistence.EntityManager;
-import javax.persistence.metamodel.SingularAttribute;
 import java.util.List;
 import java.util.Optional;
 

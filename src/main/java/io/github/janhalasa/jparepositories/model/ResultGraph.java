@@ -1,6 +1,6 @@
 package io.github.janhalasa.jparepositories.model;
 
-import javax.persistence.EntityGraph;
+import jakarta.persistence.EntityGraph;
 
 public class ResultGraph<T> {
 
