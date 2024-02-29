@@ -3,7 +3,6 @@ package io.github.janhalasa.jparepositories;
 import io.github.janhalasa.jparepositories.entity.Car;
 import io.github.janhalasa.jparepositories.entity.CarModel;
 import io.github.janhalasa.jparepositories.entity.Vendor;
-import io.github.janhalasa.jparepositories.repository.CarModelRepository;
 import io.github.janhalasa.jparepositories.repository.CarRepository;
 import io.github.janhalasa.jparepositories.repository.VendorRepository;
 import jakarta.persistence.EntityManager;
@@ -37,7 +36,6 @@ public class RepositoryTest {
 	private PersistenceUnitUtil unitUtil;
 
 	private VendorRepository vendorRepository;
-	private CarModelRepository carModelRepository;
 	private CarRepository carRepository;
 
 	@BeforeEach
@@ -48,7 +46,6 @@ public class RepositoryTest {
 			this.unitUtil = em.getEntityManagerFactory().getPersistenceUnitUtil();
 
 			this.vendorRepository = new VendorRepository(this.em);
-			this.carModelRepository = new CarModelRepository(this.em);
 			this.carRepository = new CarRepository(this.em);
 		}
 	}
@@ -70,9 +67,9 @@ public class RepositoryTest {
 			assertEquals(pageSize, vendorResultPage.getPageSize());
 			assertEquals(pageSize, vendorResultPage.getResults().size());
 
-			vendorResultPage.getResults().forEach(vendorFromPage -> {
-				assertTrue(unitUtil.isLoaded(vendorFromPage.getModels()));
-			});
+			vendorResultPage.getResults().forEach(vendorFromPage ->
+				assertTrue(unitUtil.isLoaded(vendorFromPage.getModels()))
+			);
 		});
 	}
 
@@ -122,11 +119,11 @@ public class RepositoryTest {
 
 	@Test
 	void testLoadFailsOnNonUniqueResult() {
-		rollback(() -> {
+		rollback(() ->
 			Assertions.assertThrows(
 					NonUniqueResultException.class,
-					() -> this.carRepository.loadByColor("green"));
-		});
+					() -> this.carRepository.loadByColor("green"))
+		);
 	}
 
 	@Test
@@ -163,6 +160,18 @@ public class RepositoryTest {
 					color,
 					car.getColor());
 		});
+	}
+
+	@Test
+	void givenQueryWithJoins_whenPageWhere_thenCorrectCountCalculated() {
+		int pageNumber = 1;
+		int pageSize = 100;
+		int expectedTotalCount = 1;
+		ResultPage<Vendor> vendorResultPage = this.vendorRepository.pageWhereModelNameContainsA(pageNumber, pageSize);
+		assertEquals(pageNumber, vendorResultPage.getPageNumber());
+		assertEquals(pageSize, vendorResultPage.getPageSize());
+		assertEquals(expectedTotalCount, vendorResultPage.getTotalCount());
+		assertEquals(expectedTotalCount, vendorResultPage.getResults().size());
 	}
 
 	private void rollback(Runnable runnable) {

@@ -18,6 +18,7 @@ INSERT INTO Vendor (id, name, version) VALUES (1015, 'Seat', 1);
 INSERT INTO CarModel (id, vendor_id, name) VALUES (1, 1000, 'Megane');
 INSERT INTO CarModel (id, vendor_id, name) VALUES (2, 1000, 'Espace');
 INSERT INTO CarModel (id, vendor_id, name) VALUES (3, 1000, 'Clio');
+INSERT INTO CarModel (id, vendor_id, name) VALUES (4, 1014, 'Duster');
 
 INSERT INTO Car (id, model_id, color) VALUES (1, 1, 'red');
 INSERT INTO Car (id, model_id, color) VALUES (2, 1, 'green');

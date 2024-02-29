@@ -363,9 +363,10 @@ public abstract class BasicRepository<T, P> {
 				.setMaxResults(pageSize)
 				.getResultList();
 
+		// Count is always distinct, because we always want to count distinct entities, no matter how JPA composes the SELECT statement.
+		// If there are *ToMany joins applied, the count would be incorrect (higher) without the distinct clause.
 		final long totalCount = this.countWhere(
-				(cb, root) -> predicateAndOrderBuilder.build(cb, root).getPredicate(),
-				distinct);
+				(cb, root) -> predicateAndOrderBuilder.build(cb, root).getPredicate(), true);
 
 		return new ResultPage<>(totalCount, pageNumber, pageSize, resultList);
 	}
