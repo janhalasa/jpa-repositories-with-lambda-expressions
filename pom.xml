@@ -108,38 +108,13 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.sonatype.plugins</groupId>
-				<artifactId>nexus-staging-maven-plugin</artifactId>
-				<version>1.6.13</version>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.7.0</version>
 				<extensions>true</extensions>
 				<configuration>
-					<serverId>ossrh</serverId>
-					<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					<publishingServerId>central</publishingServerId>
 				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-						<configuration>
-							<keyname>${gpg.keyname}</keyname>
-							<passphraseServerId>${gpg.keyname}</passphraseServerId>
-							<gpgArguments>
-								<arg>--pinentry-mode</arg>
-								<arg>loopback</arg>
-							</gpgArguments>
-						</configuration>
-					</execution>
-				</executions>
 			</plugin>
 
 			<plugin>
@@ -186,33 +161,6 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
-
-					<plugin>
-						<groupId>org.jreleaser</groupId>
-						<artifactId>jreleaser-maven-plugin</artifactId>
-						<version>1.7.0</version>
-						<configuration>
-							<jreleaser>
-								<signing>
-									<active>ALWAYS</active>
-									<armored>true</armored>
-								</signing>
-								<deploy>
-									<maven>
-										<nexus2>
-											<maven-central>
-												<active>ALWAYS</active>
-												<url>https://s01.oss.sonatype.org/service/local</url>
-												<closeRepository>false</closeRepository>
-												<releaseRepository>false</releaseRepository>
-												<stagingRepositories>target/staging-deploy</stagingRepositories>
-											</maven-central>
-										</nexus2>
-									</maven>
-								</deploy>
-							</jreleaser>
-						</configuration>
 					</plugin>
 				</plugins>
 			</build>
