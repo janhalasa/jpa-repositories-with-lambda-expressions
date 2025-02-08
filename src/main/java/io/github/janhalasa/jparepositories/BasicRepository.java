@@ -1,10 +1,10 @@
 package io.github.janhalasa.jparepositories;
 
-import io.github.janhalasa.jparepositories.model.OrderBy;
-import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
+import io.github.janhalasa.jparepositories.model.PagingParams;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrderBuilder;
 import io.github.janhalasa.jparepositories.model.PredicateBuilder;
 import io.github.janhalasa.jparepositories.model.QueryBuilder;
+import io.github.janhalasa.jparepositories.model.QueryParams;
 import io.github.janhalasa.jparepositories.model.ResultGraph;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
@@ -13,18 +13,12 @@ import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaDelete;
 import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Order;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.SingularAttribute;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Implements support for lambda queries. The most important class of the project.
@@ -80,14 +74,16 @@ public abstract class BasicRepository<T, P> {
 	 */
 	private TypedQuery<T> createTypedQuery(
 			QueryBuilder<T> queryBuilder,
-			ResultGraph<T> resultGraph) {
-		CriteriaBuilder cb = em().getCriteriaBuilder();
-		CriteriaQuery<T> q = cb.createQuery(entityClass);
-		Root<T> root = q.from(entityClass);
-		CriteriaQuery<T> criteriaQuery = q.select(root);
-		criteriaQuery = queryBuilder.build(cb, root, criteriaQuery);
+			ResultGraph<T> resultGraph,
+			boolean distinct) {
+		final CriteriaBuilder cb = em().getCriteriaBuilder();
+		final CriteriaQuery<T> q = cb.createQuery(entityClass);
+		final Root<T> root = q.from(entityClass);
+		final CriteriaQuery<T> criteriaQuery = q.select(root);
+		queryBuilder.build(cb, root, criteriaQuery, false);
 
 		final TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+		criteriaQuery.distinct(distinct);
 
 		if (resultGraph != null) {
 			typedQuery.setHint(resultGraph.getType(), resultGraph.getEntityGraph());
@@ -96,18 +92,19 @@ public abstract class BasicRepository<T, P> {
 		return typedQuery;
 	}
 
+	private TypedQuery<T> createTypedQuery(QueryParams<T> queryParams) {
+		return createTypedQuery(
+				queryParams.getQueryBuilder(),
+				queryParams.getResultGraph(),
+				queryParams.isDistinct());
+	}
+
+	private TypedQuery<T> createTypedQuery(QueryBuilder<T> queryBuilder, ResultGraph<T> resultGraph) {
+		return this.createTypedQuery(queryBuilder, resultGraph, false);
+	}
+
 	private TypedQuery<T> createTypedQuery(QueryBuilder<T> queryBuilder) {
 		return this.createTypedQuery(queryBuilder, null);
-	}
-
-	private static List<Order> buildOrderBy(List<OrderBy> orderByList, CriteriaBuilder cb) {
-		return orderByList.stream()
-				.map(orderBy -> orderBy.toJpa(cb))
-				.collect(Collectors.toList());
-	}
-
-	protected TypedQuery<T> createQuery(QueryBuilder<T> queryBuilder) {
-		return createTypedQuery(queryBuilder);
 	}
 
 	protected TypedQuery<T> createQuery(
@@ -123,23 +120,6 @@ public abstract class BasicRepository<T, P> {
 		return eg;
 	}
 
-	protected Predicate[] buildPredicates(CriteriaBuilder cb, Root<T> root, PredicateBuilder<T>[] predicateBuilders) {
-		final List<Predicate> predicates = new ArrayList<>();
-		if (predicateBuilders != null) {
-			for (PredicateBuilder<T> builder : predicateBuilders) {
-				predicates.add(builder.build(cb, root));
-			}
-		}
-		return predicates.toArray(new Predicate[0]);
-	}
-
-	@SuppressWarnings("unchecked")
-	private PredicateBuilder<T>[] toPredicateBuilderArray(PredicateBuilder<T> predicateBuilder) {
-		return predicateBuilder != null
-				? new PredicateBuilder[]{predicateBuilder}
-				: new PredicateBuilder[]{};
-	}
-
 	protected List<T> find(QueryBuilder<T> queryBuilder) {
 		return find(queryBuilder, null);
 	}
@@ -149,35 +129,31 @@ public abstract class BasicRepository<T, P> {
 	}
 
 	protected List<T> findWhere(PredicateBuilder<T> predicateBuilder) {
-		return this.findWhere(predicateBuilder, null);
+		return this.findWhere(new QueryParams<>(predicateBuilder));
 	}
 
 	protected List<T> findWhere(PredicateBuilder<T> predicateBuilder, ResultGraph<T> resultGraph) {
-		return this.findWhereOrdered(
-				PredicateAndOrderBuilder.of(predicateBuilder),
-				resultGraph);
+		return this.findWhereOrdered(new QueryParams<>(predicateBuilder, resultGraph));
+	}
+
+	protected List<T> findWhere(QueryParams<T> queryParameters) {
+		return this.findWhereOrdered(queryParameters);
 	}
 
 	protected List<T> findWhereOrdered(PredicateAndOrderBuilder<T> predicateAndOrderBuilder) {
-		return findWhereOrdered(predicateAndOrderBuilder, null);
+		return findWhereOrdered(new QueryParams<>(predicateAndOrderBuilder));
 	}
 
 	protected List<T> findWhereOrdered(
 			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
 			ResultGraph<T> resultGraph) {
-		return createTypedQuery(
-				(cb, root, query) -> {
-					final PredicateAndOrder predicateAndOrder = predicateAndOrderBuilder.build(cb, root);
-					if (predicateAndOrder.getPredicate() != null) {
-						query.where(predicateAndOrder.getPredicate());
-					}
-					if (predicateAndOrder.getOrders() != null) {
-						query.orderBy(buildOrderBy(predicateAndOrder.getOrders(), cb));
-					}
-					return query;
-				},
-				resultGraph
-		).getResultList();
+		return this.findWhereOrdered(new QueryParams<>(
+				predicateAndOrderBuilder,
+				resultGraph));
+	}
+
+	protected List<T> findWhereOrdered(QueryParams<T> queryParameters) {
+		return createTypedQuery(queryParameters).getResultList();
 	}
 
 	protected List<T> findAll() {
@@ -185,42 +161,19 @@ public abstract class BasicRepository<T, P> {
 	}
 
 	protected List<T> findAll(ResultGraph<T> resultGraph) {
-		return this.find((cb, root, criteriaQuery) -> criteriaQuery, resultGraph);
+		return this.find((cb, root, criteriaQuery, omitSorting) -> {}, resultGraph);
 	}
 
-	@SuppressWarnings("unchecked")
-	protected T loadWhere(List<PredicateBuilder<T>> predicateBuilders, ResultGraph<T> resultGraph) {
-		return createTypedQuery(
-				(cb, root, query) -> (query
-						.where(buildPredicates(
-								cb,
-								root,
-								predicateBuilders.toArray(new PredicateBuilder[0])))),
-				resultGraph
-		).getSingleResult();
-	}
-
-	protected T loadWhere(List<PredicateBuilder<T>> predicateBuilders) {
-		return loadWhere(predicateBuilders, null);
-	}
-
-	protected T loadWhere(PredicateBuilder<T> predicateBuilder) {
-		return loadWhere(Collections.singletonList(predicateBuilder));
+	protected T loadWhere(QueryParams<T> queryParams) {
+		return createTypedQuery(queryParams).getSingleResult();
 	}
 
 	protected T loadWhere(PredicateBuilder<T> predicateBuilder, ResultGraph<T> resultGraph) {
-		return loadWhere(Collections.singletonList(predicateBuilder), resultGraph);
+		return this.loadWhere(new QueryParams<>(predicateBuilder, resultGraph, false));
 	}
 
-	protected T loadWhere(PredicateBuilder<T> predicateBuilder1, PredicateBuilder<T> predicateBuilder2) {
-		return loadWhere(Arrays.asList(predicateBuilder1, predicateBuilder2));
-	}
-
-	protected T loadWhere(
-			PredicateBuilder<T> predicateBuilder1,
-			PredicateBuilder<T> predicateBuilder2,
-			ResultGraph<T> resultGraph) {
-		return loadWhere(Arrays.asList(predicateBuilder1, predicateBuilder2), resultGraph);
+	protected T loadWhere(PredicateBuilder<T> predicateBuilder) {
+		return loadWhere(new QueryParams<>(predicateBuilder));
 	}
 
 	protected T loadByPk(P pkValue) {
@@ -231,15 +184,8 @@ public abstract class BasicRepository<T, P> {
 		return this.loadWhere((cb, root) -> cb.equal(root.get(this.pkField), pkValue), resultGraph);
 	}
 
-	protected Optional<T> getWhere(List<PredicateBuilder<T>> predicateBuilders, ResultGraph<T> resultGraph) {
-		@SuppressWarnings("unchecked")
-		final List<T> results = createTypedQuery(
-				(cb, root, query) -> (query.where(buildPredicates(
-						cb,
-						root,
-						predicateBuilders.toArray(new PredicateBuilder[0])))),
-				resultGraph
-		).getResultList();
+	protected Optional<T> getWhere(QueryParams<T> queryParams) {
+		final List<T> results = createTypedQuery(queryParams).getResultList();
 		if (results.isEmpty()) {
 			return Optional.empty();
 		}
@@ -249,29 +195,12 @@ public abstract class BasicRepository<T, P> {
 		return Optional.of(results.get(0));
 	}
 
-	protected Optional<T> getWhere(List<PredicateBuilder<T>> predicateBuilders) {
-		return getWhere(predicateBuilders, null);
+	protected Optional<T> getWhere(PredicateBuilder<T> predicateBuilder, ResultGraph<T> resultGraph) {
+		return this.getWhere(new QueryParams<>(predicateBuilder, resultGraph, false));
 	}
 
 	protected Optional<T> getWhere(PredicateBuilder<T> predicateBuilder) {
-		return getWhere(predicateBuilder, (ResultGraph<T>) null);
-	}
-
-	protected Optional<T> getWhere(PredicateBuilder<T> predicateBuilder, ResultGraph<T> resultGraph) {
-		return getWhere(Collections.singletonList(predicateBuilder), resultGraph);
-	}
-
-	protected Optional<T> getWhere(
-			PredicateBuilder<T> predicateBuilder1,
-			PredicateBuilder<T> predicateBuilder2) {
-		return getWhere(predicateBuilder1, predicateBuilder2, null);
-	}
-
-	protected Optional<T> getWhere(
-			PredicateBuilder<T> predicateBuilder1,
-			PredicateBuilder<T> predicateBuilder2,
-			ResultGraph<T> resultGraph) {
-		return getWhere(Arrays.asList(predicateBuilder1, predicateBuilder2), resultGraph);
+		return getWhere(new QueryParams<>(predicateBuilder));
 	}
 
 	protected Optional<T> getByPk(P pkValue) {
@@ -283,20 +212,21 @@ public abstract class BasicRepository<T, P> {
 	}
 
 	protected long countWhere(PredicateBuilder<T> predicateBuilder) {
-		return countWhere(predicateBuilder, false);
+		return countWhere(PredicateAndOrderBuilder.of(predicateBuilder).toQueryBuilder(false), false);
+	}
+
+	protected long countWhere(PredicateBuilder<T> predicateBuilder, boolean distinct) {
+		return countWhere(PredicateAndOrderBuilder.of(predicateBuilder).toQueryBuilder(false), distinct);
 	}
 
 	protected long countWhere(
-			PredicateBuilder<T> predicateBuilder,
+			QueryBuilder<T> queryBuilder,
 			boolean distinct) {
-		CriteriaBuilder cb = em().getCriteriaBuilder();
-		CriteriaQuery<Long> q = cb.createQuery(Long.class);
-		Root<T> root = q.from(entityClass);
-		CriteriaQuery<Long> criteriaQuery = q.select(distinct ? cb.countDistinct(root) : cb.count(root));
-		final Predicate predicate = predicateBuilder.build(cb, root);
-		if (predicate != null) {
-			criteriaQuery = criteriaQuery.where(predicate);
-		}
+		final CriteriaBuilder cb = em().getCriteriaBuilder();
+		final CriteriaQuery<Long> q = cb.createQuery(Long.class);
+		final Root<T> root = q.from(entityClass);
+		final CriteriaQuery<Long> criteriaQuery = q.select(distinct ? cb.countDistinct(root) : cb.count(root));
+		queryBuilder.build(cb, root, criteriaQuery, true);
 		return em.createQuery(criteriaQuery)
 				.getSingleResult();
 	}
@@ -305,11 +235,10 @@ public abstract class BasicRepository<T, P> {
 			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
 			int pageNumber,
 			int pageSize) {
-		return pageWhere(
+		return pageWhere(new PagingParams<>(
 				predicateAndOrderBuilder,
 				pageNumber,
-				pageSize,
-				null);
+				pageSize));
 	}
 
 	protected ResultPage<T> pageWhere(
@@ -317,13 +246,13 @@ public abstract class BasicRepository<T, P> {
 			int pageNumber,
 			int pageSize,
 			ResultGraph<T> resultGraph) {
-		return pageWhere(
+		return pageWhere(new PagingParams<>(
 				predicateAndOrderBuilder,
 				pageNumber,
 				pageSize,
-				false,
-				resultGraph);
+				resultGraph));
 	}
+
 
 	protected ResultPage<T> pageWhere(
 			PredicateAndOrderBuilder<T> predicateAndOrderBuilder,
@@ -331,10 +260,19 @@ public abstract class BasicRepository<T, P> {
 			int pageSize,
 			boolean distinct,
 			ResultGraph<T> resultGraph) {
+		return pageWhere(new PagingParams<>(
+				predicateAndOrderBuilder,
+				pageNumber,
+				pageSize,
+				resultGraph,
+				distinct
+		));
+	}
 
-		if (predicateAndOrderBuilder == null) {
-			throw new IllegalArgumentException("Pagination requires at least a sort definition.");
-		}
+	protected ResultPage<T> pageWhere(PagingParams<T> pagingParams) {
+		final int pageNumber = pagingParams.getPageNumber();
+		final int pageSize = pagingParams.getPageSize();
+
 		if (pageNumber < 1) {
 			throw new IllegalArgumentException("Page number must be 1 or higher: " + pageNumber);
 		}
@@ -342,21 +280,7 @@ public abstract class BasicRepository<T, P> {
 			throw new IllegalArgumentException("Page size must be 1 or higher: " + pageSize);
 		}
 
-		final TypedQuery<T> typedQuery = createTypedQuery(
-				(cb, root, query) -> {
-					query.distinct(distinct);
-					final PredicateAndOrder predicateAndOrder = predicateAndOrderBuilder.build(cb, root);
-					if (predicateAndOrder.getPredicate() != null) {
-						query.where(predicateAndOrder.getPredicate());
-					}
-					if (predicateAndOrder.getOrders() == null) {
-						throw new IllegalArgumentException("Pagination requires a sort definition " +
-								"to be able to produce repeatable results.");
-					}
-					query.orderBy(buildOrderBy(predicateAndOrder.getOrders(), cb));
-					return query;
-				},
-				resultGraph);
+		final TypedQuery<T> typedQuery = createTypedQuery(pagingParams.getQueryParams());
 
 		final List<T> resultList = typedQuery
 				.setFirstResult((pageNumber - 1) * pageSize)
@@ -365,8 +289,7 @@ public abstract class BasicRepository<T, P> {
 
 		// Count is always distinct, because we always want to count distinct entities, no matter how JPA composes the SELECT statement.
 		// If there are *ToMany joins applied, the count would be incorrect (higher) without the distinct clause.
-		final long totalCount = this.countWhere(
-				(cb, root) -> predicateAndOrderBuilder.build(cb, root).getPredicate(), true);
+		final long totalCount = this.countWhere(pagingParams.getQueryParams().getQueryBuilder(), true);
 
 		return new ResultPage<>(totalCount, pageNumber, pageSize, resultList);
 	}

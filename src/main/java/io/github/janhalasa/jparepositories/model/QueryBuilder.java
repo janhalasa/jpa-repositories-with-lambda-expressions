@@ -10,5 +10,5 @@ import jakarta.persistence.criteria.Root;
  */
 public interface QueryBuilder<T> {
 
-	CriteriaQuery<T> build(CriteriaBuilder criteriaBuilder, Root<T> root, CriteriaQuery<T> criteriaQuery);
+	void build(CriteriaBuilder criteriaBuilder, Root<T> root, CriteriaQuery<?> criteriaQuery, boolean omitSorting);
 }
