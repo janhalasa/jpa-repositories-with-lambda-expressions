@@ -3,6 +3,7 @@ package io.github.janhalasa.jparepositories;
 import io.github.janhalasa.jparepositories.model.PredicateBuilder;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.transaction.Transactional;
 
 public class CrudRepository<T, P> extends ReadPersistRepository<T, P> {
 
@@ -20,14 +21,17 @@ public class CrudRepository<T, P> extends ReadPersistRepository<T, P> {
         super(em, entityClass, pkField);
     }
 
+    @Transactional
     public T merge(T entity) {
         return super.merge(entity);
     }
 
+    @Transactional
     public void remove(T entity) {
         super.remove(entity);
     }
 
+    @Transactional
     public void removeByPk(P entityPk) {
         super.removeByPk(entityPk);
     }

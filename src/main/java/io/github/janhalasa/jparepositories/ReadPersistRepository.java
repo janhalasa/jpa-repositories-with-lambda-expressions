@@ -2,6 +2,7 @@ package io.github.janhalasa.jparepositories;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.metamodel.SingularAttribute;
+import jakarta.transaction.Transactional;
 
 public abstract class ReadPersistRepository<T, P> extends ReadOnlyRepository<T, P> {
 
@@ -19,6 +20,7 @@ public abstract class ReadPersistRepository<T, P> extends ReadOnlyRepository<T, 
         super(em, entityClass, pkField);
     }
 
+    @Transactional
     public void persist(T entity) {
         super.persist(entity);
     }

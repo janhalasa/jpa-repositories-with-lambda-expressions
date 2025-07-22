@@ -62,6 +62,11 @@
 			<version>${hibernate-jpamodelgen.version}</version>
 			<scope>provided</scope>
 		</dependency>
+		<dependency>
+			<groupId>jakarta.transaction</groupId>
+			<artifactId>jakarta.transaction-api</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 
 		<dependency>
 			<groupId>org.hibernate.orm</groupId>

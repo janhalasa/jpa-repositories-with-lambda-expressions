@@ -8,7 +8,7 @@ import jakarta.persistence.metamodel.SingularAttribute;
 
 import java.util.Objects;
 
-public abstract class VersionAwareCrudRepository<T extends VersionAware, P> extends ReadPersistRepository<T, P> {
+public abstract class VersionAwareCrudRepository<T extends VersionAware, P> extends CrudRepository<T, P> {
 
     /**
      * This no-param constructor is here just for CDI. In your code, use the one with parameters.
