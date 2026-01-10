@@ -40,4 +40,16 @@ public class CarRepository extends ReadPersistRepository<Car, Long> {
 	public int removeByColor(String color) {
 		return removeWhere((cb, root) -> cb.equal(root.get(Car_.color), color));
 	}
+
+	public Car loadWithSelectByColor(String color) {
+		return select()
+				.where((cb, root) -> cb.equal(root.get(Car_.color), color))
+				.load(this.em());
+	}
+
+	public Optional<Car> getWithSelectByColor(String color) {
+		return select()
+				.where((cb, root) -> cb.equal(root.get(Car_.color), color))
+				.get(this.em());
+	}
 }

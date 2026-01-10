@@ -3,6 +3,7 @@ package io.github.janhalasa.jparepositories;
 import io.github.janhalasa.jparepositories.entity.Car;
 import io.github.janhalasa.jparepositories.entity.CarModel;
 import io.github.janhalasa.jparepositories.entity.Vendor;
+import io.github.janhalasa.jparepositories.repository.CarModelRepository;
 import io.github.janhalasa.jparepositories.repository.CarRepository;
 import io.github.janhalasa.jparepositories.repository.VendorRepository;
 import jakarta.persistence.EntityManager;
@@ -37,6 +38,7 @@ public class RepositoryTest {
 
 	private VendorRepository vendorRepository;
 	private CarRepository carRepository;
+	private CarModelRepository carModelRepository;
 
 	@BeforeEach
 	void beforeEach() {
@@ -47,6 +49,7 @@ public class RepositoryTest {
 
 			this.vendorRepository = new VendorRepository(this.em);
 			this.carRepository = new CarRepository(this.em);
+			this.carModelRepository = new CarModelRepository(this.em);
 		}
 	}
 
@@ -138,10 +141,40 @@ public class RepositoryTest {
 	}
 
 	@Test
+	void givenUniqueResultExists_whenSelect_thenResultReturned() {
+		rollback(() -> {
+			String color = "red";
+			Car car = this.carRepository.loadWithSelectByColor(color);
+			assertEquals(
+					color,
+					car.getColor());
+		});
+	}
+
+	@Test
 	void testGetFailsOnNonUniqueResult() {
 		rollback(() -> Assertions.assertThrows(
 				NonUniqueResultException.class,
 				() -> RepositoryTest.this.carRepository.getByColor("green")));
+	}
+
+	@Test
+	void givenNonUniqueResults_whenLoadWithSelect_thenFails() {
+		rollback(() -> Assertions.assertThrows(
+				NonUniqueResultException.class,
+				() -> RepositoryTest.this.carRepository.loadWithSelectByColor("green")));
+	}
+
+	@Test
+	void givenNonUniqueResults_whenFindWithSelect_thenAllResultsReturned() {
+		rollback(() -> {
+			String color1 = "green";
+			String color2 = "red";
+			List<CarModel> models = this.carModelRepository.findWithSelectByCarColors(color1, color2, false);
+			assertEquals(
+					3,
+					models.size());
+		});
 	}
 
 	@Test
@@ -156,6 +189,17 @@ public class RepositoryTest {
 		rollback(() -> {
 			String color = "red";
 			Car car = this.carRepository.getByColor(color).get();
+			assertEquals(
+					color,
+					car.getColor());
+		});
+	}
+
+	@Test
+	void givenUniqueResult_whenSelect_thenResultReturned() {
+		rollback(() -> {
+			String color = "red";
+			Car car = this.carRepository.getWithSelectByColor(color).get();
 			assertEquals(
 					color,
 					car.getColor());

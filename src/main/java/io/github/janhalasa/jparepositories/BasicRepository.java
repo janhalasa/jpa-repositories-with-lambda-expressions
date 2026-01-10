@@ -6,6 +6,7 @@ import io.github.janhalasa.jparepositories.model.PredicateBuilder;
 import io.github.janhalasa.jparepositories.model.QueryBuilder;
 import io.github.janhalasa.jparepositories.model.QueryParams;
 import io.github.janhalasa.jparepositories.model.ResultGraph;
+import io.github.janhalasa.jparepositories.select.Select;
 import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NonUniqueResultException;
@@ -113,10 +114,9 @@ public abstract class BasicRepository<T, P> {
 		return createTypedQuery(queryBuilder, resultGraph);
 	}
 
-	@SuppressWarnings("unchecked")
 	protected EntityGraph<T> createEntityGraph(List<Attribute<T, ?>> nodesToAdd) {
 		EntityGraph<T> eg = em().createEntityGraph(entityClass);
-		eg.addAttributeNodes(nodesToAdd.toArray(new Attribute[0]));
+		nodesToAdd.forEach(eg::addAttributeNodes);
 		return eg;
 	}
 
@@ -316,5 +316,9 @@ public abstract class BasicRepository<T, P> {
 		Root<T> root = delete.from(this.entityClass());
 		delete.where(predicateBuilder.build(cb, root));
 		return em().createQuery(delete).executeUpdate();
+	}
+
+	protected Select<T> select() {
+		return Select.from(this.entityClass());
 	}
 }

@@ -3,6 +3,7 @@ package io.github.janhalasa.jparepositories.entity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 /**
@@ -19,6 +20,7 @@ public class Car {
 	private String color;
 
 	@ManyToOne
+	@JoinColumn(name="model_id", nullable=false)
 	private CarModel model;
 
 	public Car() {

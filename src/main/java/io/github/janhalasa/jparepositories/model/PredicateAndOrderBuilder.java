@@ -12,7 +12,7 @@ public interface PredicateAndOrderBuilder<T> {
     PredicateAndOrder build(CriteriaBuilder cb, Root<T> root);
 
     static <T> PredicateAndOrderBuilder<T> of(PredicateBuilder<T> predicateBuilder) {
-        return (cb, root) -> new PredicateAndOrder(predicateBuilder.build(cb, root), null);
+        return (cb, root) -> new PredicateAndOrder(predicateBuilder.build(cb, root), List.of());
     }
 
     default QueryBuilder<T> toQueryBuilder(boolean requireOrdering) {

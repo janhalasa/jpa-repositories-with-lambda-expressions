@@ -14,6 +14,11 @@ public class PredicateAndOrder {
         this.orders = orders;
     }
 
+    public PredicateAndOrder(Predicate predicate, OrderBy orderBy) {
+        this.predicate = predicate;
+        this.orders = List.of(orderBy);
+    }
+
     public PredicateAndOrder(List<OrderBy> orders) {
         this(null, orders);
     }
