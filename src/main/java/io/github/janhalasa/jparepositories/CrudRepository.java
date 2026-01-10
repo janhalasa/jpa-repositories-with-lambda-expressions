@@ -17,7 +17,7 @@ public class CrudRepository<T, P> extends ReadPersistRepository<T, P> {
     protected CrudRepository(
             EntityManager em,
             Class<T> entityClass,
-            SingularAttribute<T, P> pkField) {
+            SingularAttribute<? super T, P> pkField) {
         super(em, entityClass, pkField);
     }
 

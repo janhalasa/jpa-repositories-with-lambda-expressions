@@ -31,7 +31,7 @@ public abstract class BasicRepository<T, P> {
 
 	private Class<T> entityClass;
 	private String entityName;
-	private SingularAttribute<T, P> pkField;
+	private SingularAttribute<? super T, P> pkField;
 
 	private EntityManager em;
 
@@ -45,7 +45,7 @@ public abstract class BasicRepository<T, P> {
 	protected BasicRepository(
 			EntityManager em,
 			Class<T> entityClass,
-			SingularAttribute<T, P> pkField) {
+			SingularAttribute<? super T, P> pkField) {
 		this.em = em;
 		this.entityClass = entityClass;
 		this.entityName = JpaUtils.getEntityName(entityClass);
@@ -64,7 +64,7 @@ public abstract class BasicRepository<T, P> {
 		return this.entityName;
 	}
 
-	protected SingularAttribute<T, ?> pkField() {
+	protected SingularAttribute<? super T, ?> pkField() {
 		return this.pkField;
 	}
 

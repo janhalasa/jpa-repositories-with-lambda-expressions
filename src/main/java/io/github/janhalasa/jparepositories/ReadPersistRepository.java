@@ -16,7 +16,7 @@ public abstract class ReadPersistRepository<T, P> extends ReadOnlyRepository<T, 
     protected ReadPersistRepository(
             EntityManager em,
             Class<T> entityClass,
-            SingularAttribute<T, P> pkField) {
+            SingularAttribute<? super T, P> pkField) {
         super(em, entityClass, pkField);
     }
 

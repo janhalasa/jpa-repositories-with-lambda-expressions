@@ -19,7 +19,7 @@ public class ReadOnlyRepository<T, P> extends BasicRepository<T, P> {
     protected ReadOnlyRepository(
             EntityManager em,
             Class<T> entityClass,
-            SingularAttribute<T, P> pkField) {
+            SingularAttribute<? super T, P> pkField) {
         super(em, entityClass, pkField);
     }
 
