@@ -13,9 +13,33 @@ Add the library as a Maven dependency:
 <dependency>
     <artifactId>jpa-repositories-with-lambda-expressions</artifactId>
     <groupId>io.github.janhalasa</groupId>
-    <version>0.7.3</version>
+    <version>0.9.0</version>
 </dependency>
 ```
+
+## Fluent query API ##
+
+The `io.github.janhalasa.jparepositories.select.Select` class provides a fluent API for building database queries.
+For constructing a where clause, it uses basic JPA Criteria API, but provides the CriteriaBuilder and Root objects,
+so it's straightforward.
+
+This API can be used from the repositories described below using the `select()` method.
+
+Example:
+```java
+class CarRepository {
+    public List<Car> findCarsByBrand(String brandName) {
+        Select.from(Car.class, entityManager)
+                .where((cb, root) -> cb.equal(root.get(Car_.brand), brandName))
+                .orderBy(OrderAttr.asc(Car_.vin))
+                .distinct()
+                .find();
+    }
+}
+```
+
+## Repositories ##
+
 To create a repository class, extend one of the provided repositories:
 
 * `BasicRepository` - no public methods - just methods you can use to create your custom repository
@@ -109,6 +133,11 @@ findWhere(
         (cb, root) -> cb.equal(root.get(Vendor_.name), searchedName),
         ResultGraph.specifiedAssociationsOnly(createEntityGraph(List.of(Vendor_.models))));
 ```
+
+### Fluent API ###
+
+The repositories support the fluent API described at the beginning of this document. Use the `select()` method,
+which replaces the `Select.from(class, em)`, because the repositories already have those parameter values.
 
 ## Modifications ##
 
