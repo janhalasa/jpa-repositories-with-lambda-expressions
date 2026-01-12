@@ -30,6 +30,6 @@ public class CarModelRepository extends CrudRepository<CarModel, Long> {
 					);
 				})
 				.distinct(distinct)
-				.find();
+				.list();
 	}
 }

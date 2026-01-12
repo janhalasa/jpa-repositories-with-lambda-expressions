@@ -27,14 +27,12 @@ This API can be used from the repositories described below using the `select()` 
 
 Example:
 ```java
-class CarRepository {
-    public List<Car> findCarsByBrand(String brandName) {
-        Select.from(Car.class, entityManager)
-                .where((cb, root) -> cb.equal(root.get(Car_.brand), brandName))
-                .orderBy(OrderAttr.asc(Car_.vin))
-                .distinct()
-                .find();
-    }
+public List<Car> findCarsByBrand(String brandName) {
+    Select.from(Car.class, entityManager)
+            .where((cb, root) -> cb.equal(root.get(Car_.brand), brandName))
+            .orderBy(OrderAttr.asc(Car_.vin))
+            .distinct()
+            .list();
 }
 ```
 

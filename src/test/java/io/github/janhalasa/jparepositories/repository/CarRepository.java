@@ -46,13 +46,13 @@ public class CarRepository extends ReadPersistRepository<Car, Long> {
 		return select()
 				.where((cb, root) -> cb.equal(root.get(Car_.color), color))
 				.orderBy(OrderAttr.asc(Car_.model), OrderAttr.asc(Car_.id))
-				.load();
+				.single();
 	}
 
 	public Optional<Car> getWithSelectByColor(String color) {
 		return select()
 				.where((cb, root) -> cb.equal(root.get(Car_.color), color))
 				.orderBy(OrderAttr.asc(Car_.id))
-				.get();
+				.optional();
 	}
 }

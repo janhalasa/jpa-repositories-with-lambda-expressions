@@ -215,7 +215,7 @@ public class Select<T> {
         }
     }
 
-    public Optional<T> get() {
+    public Optional<T> optional() {
         List<T> resultList = this.createQuery().getResultList();
         if (resultList.isEmpty()) {
             return Optional.empty();
@@ -226,11 +226,11 @@ public class Select<T> {
         return Optional.of(resultList.get(0));
     }
 
-    public T load() {
+    public T single() {
         return this.createQuery().getSingleResult();
     }
 
-    public List<T> find() {
+    public List<T> list() {
         return this.createQuery().getResultList();
     }
 
