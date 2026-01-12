@@ -5,6 +5,7 @@ import io.github.janhalasa.jparepositories.entity.Car;
 import io.github.janhalasa.jparepositories.entity.CarModel_;
 import io.github.janhalasa.jparepositories.entity.Car_;
 import io.github.janhalasa.jparepositories.entity.Vendor;
+import io.github.janhalasa.jparepositories.model.OrderAttr;
 import jakarta.persistence.EntityManager;
 
 import java.util.List;
@@ -44,12 +45,14 @@ public class CarRepository extends ReadPersistRepository<Car, Long> {
 	public Car loadWithSelectByColor(String color) {
 		return select()
 				.where((cb, root) -> cb.equal(root.get(Car_.color), color))
-				.load(this.em());
+				.orderBy(OrderAttr.asc(Car_.model), OrderAttr.asc(Car_.id))
+				.load();
 	}
 
 	public Optional<Car> getWithSelectByColor(String color) {
 		return select()
 				.where((cb, root) -> cb.equal(root.get(Car_.color), color))
-				.get(this.em());
+				.orderBy(OrderAttr.asc(Car_.id))
+				.get();
 	}
 }

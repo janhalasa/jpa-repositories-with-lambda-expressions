@@ -11,21 +11,29 @@ public class OrderBy {
     private final OrderDirection direction;
     private final Path<?> attributePath;
 
-    private OrderBy(Path<?> attributePath, OrderDirection direction) {
+    private OrderBy(
+            Path<?> attributePath,
+            OrderDirection direction) {
         this.direction = direction;
         this.attributePath = attributePath;
     }
 
     public static OrderBy of(Path<?> attributePath, boolean ascending) {
-        return new OrderBy(attributePath, ascending ? OrderDirection.ASC : OrderDirection.DESC);
+        return new OrderBy(
+                attributePath,
+                ascending ? OrderDirection.ASC : OrderDirection.DESC);
     }
 
     public static OrderBy asc(Path<?> attributePath) {
-        return new OrderBy(attributePath, OrderDirection.ASC);
+        return new OrderBy(
+                attributePath,
+                OrderDirection.ASC);
     }
 
     public static OrderBy desc(Path<?> attributePath) {
-        return new OrderBy(attributePath, OrderDirection.DESC);
+        return new OrderBy(
+                attributePath,
+                OrderDirection.DESC);
     }
 
     public OrderDirection getDirection() {

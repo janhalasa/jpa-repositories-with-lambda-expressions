@@ -319,6 +319,6 @@ public abstract class BasicRepository<T, P> {
 	}
 
 	protected Select<T> select() {
-		return Select.from(this.entityClass());
+		return Select.from(this.entityClass(), this.em());
 	}
 }
