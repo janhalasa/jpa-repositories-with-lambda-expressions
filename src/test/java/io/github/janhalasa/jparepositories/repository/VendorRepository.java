@@ -6,6 +6,7 @@ import io.github.janhalasa.jparepositories.entity.CarModel;
 import io.github.janhalasa.jparepositories.entity.CarModel_;
 import io.github.janhalasa.jparepositories.entity.Vendor;
 import io.github.janhalasa.jparepositories.entity.Vendor_;
+import io.github.janhalasa.jparepositories.model.OrderAttr;
 import io.github.janhalasa.jparepositories.model.OrderBy;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
 import io.github.janhalasa.jparepositories.model.ResultGraph;
@@ -29,8 +30,8 @@ public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 		return super.pageWhere(
 				(cb, root) -> new PredicateAndOrder(
 					cb.like(root.get(Vendor_.name), "%a%"),
-					List.of(OrderBy.asc(
-							root.get(Vendor_.name)),
+					List.of(
+							OrderBy.asc(root.get(Vendor_.name)),
 							OrderBy.desc(root.get(Vendor_.id))
 					)
 				),
@@ -38,6 +39,19 @@ public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 				pageSize,
 				true,
 				ResultGraph.specifiedAssociationsOnly(createEntityGraph(List.of(Vendor_.models))));
+	}
+
+	public ResultPage<Vendor> selectPageWhereNameContainsA(int pageNumber, int pageSize) {
+		return select()
+				.where((cb, root) -> cb.like(root.get(Vendor_.name), "%a%"))
+				.orderBy(OrderAttr.asc(Vendor_.name), OrderAttr.desc(Vendor_.id))
+				.page(pageNumber, pageSize);
+	}
+
+	public long selectCountWhereNameContains(String namePattern) {
+		return select()
+				.where((cb, root) -> cb.like(root.get(Vendor_.name), "%" + namePattern + "%"))
+				.count();
 	}
 
 	public ResultPage<Vendor> pageWhereModelNameContainsA(int pageNumber, int pageSize) {
@@ -57,6 +71,10 @@ public class VendorRepository extends VersionAwareCrudRepository<Vendor, Long> {
 				pageSize,
 				true,
 				ResultGraph.specifiedAssociationsOnly(createEntityGraph(List.of(Vendor_.models))));
+	}
+
+	public List<Vendor> selectAll() {
+		return select().list();
 	}
 
 	public Vendor loadByName(String name) {

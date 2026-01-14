@@ -218,6 +218,30 @@ public class RepositoryTest {
 		assertEquals(expectedTotalCount, vendorResultPage.getResults().size());
 	}
 
+	@Test
+	void givenMoreThanPageRecords_whenSelectPage_thenCorectResultReturned() {
+		int pageNumber = 1;
+		int pageSize = 100;
+		int expectedTotalCount = 11;
+		ResultPage<Vendor> vendorResultPage = this.vendorRepository.selectPageWhereNameContainsA(pageNumber, pageSize);
+		assertEquals(pageNumber, vendorResultPage.getPageNumber());
+		assertEquals(pageSize, vendorResultPage.getPageSize());
+		assertEquals(expectedTotalCount, vendorResultPage.getTotalCount());
+		assertEquals(expectedTotalCount, vendorResultPage.getResults().size());
+	}
+
+	@Test
+	void whenCount_thenCorrectNumberReturned() {
+		long count = this.vendorRepository.selectCountWhereNameContains("a");
+		assertEquals(11, count);
+	}
+
+	@Test
+	void whenSelectAll_thenAllResultsReturned() {
+		List<Vendor> vendors = this.vendorRepository.selectAll();
+		assertEquals(16, vendors.size());
+	}
+
 	private void rollback(Runnable runnable) {
 		em.getTransaction().begin();
 		try {

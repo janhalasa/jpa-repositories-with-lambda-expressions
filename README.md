@@ -36,6 +36,13 @@ public List<Car> findCarsByBrand(String brandName) {
 }
 ```
 
+Useful API methods:
+* `Optional<T> optional()` For uncertain searches of a single record.
+* `T single()` Returns a single record or throws an Exception if none or more than one found.
+* `List<T> list()` Returns all records found.
+* `ResultPage<T> page(int pageNumber, int pageSize)` Returns the requested page of results and the total count
+* `long count()` Returns number of records matching given criteria. 
+
 ## Repositories ##
 
 To create a repository class, extend one of the provided repositories:

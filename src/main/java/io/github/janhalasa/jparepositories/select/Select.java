@@ -1,5 +1,6 @@
 package io.github.janhalasa.jparepositories.select;
 
+import io.github.janhalasa.jparepositories.ResultPage;
 import io.github.janhalasa.jparepositories.model.OrderAttr;
 import io.github.janhalasa.jparepositories.model.OrderBy;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
@@ -151,6 +152,10 @@ public class Select<T> {
     }
 
     public TypedQuery<T> createQuery() {
+        return this.createQuery(true, false);
+    }
+
+    private TypedQuery<T> createQuery(boolean applyFetch, boolean warnIfNoOrdering) {
         final CriteriaBuilder cb = em.getCriteriaBuilder();
         final CriteriaQuery<T> q = cb.createQuery(entityClass);
         final Root<T> root = q.from(entityClass);
@@ -159,13 +164,17 @@ public class Select<T> {
         applyWhere(criteriaQuery, cb, root);
 
         if (orderAttrs != null) {
-            if (this.predicateAndOrderBuilder != null) {
-                throw new IllegalStateException("Cannot use orderAttrs and predicateAndOrderBuilder at the same time.");
+            if (criteriaQuery.getOrderList() != null && !criteriaQuery.getOrderList().isEmpty()) {
+                throw new IllegalStateException("Cannot mix orderAttrs and other ways of setting order.");
             }
             List<OrderBy> orderBys = this.orderAttrs.stream()
                     .map(orderAttrs -> orderAttrs.toOrderBy(root))
                     .collect(Collectors.toList());
             criteriaQuery.orderBy(buildOrderBy(orderBys, cb));
+        }
+
+        if (warnIfNoOrdering && (criteriaQuery.getOrderList() == null || criteriaQuery.getOrderList().isEmpty())) {
+            LOGGER.warn("No ordering set. This may lead to unpredicable page results.");
         }
 
         final TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
@@ -174,12 +183,14 @@ public class Select<T> {
             criteriaQuery.distinct(distinct);
         }
 
-        applyFetch(typedQuery);
+        if (applyFetch) {
+            applyFetch(typedQuery);
+        }
 
         return typedQuery;
     }
 
-    private void applyWhere(CriteriaQuery<T> criteriaQuery, CriteriaBuilder cb, Root<T> root) {
+    private void applyWhere(CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb, Root<T> root) {
         List<String> appliedTypes = new ArrayList<>(3);
         if (predicateBuilder != null) {
             appliedTypes.add("predicateBuilder");
@@ -232,6 +243,36 @@ public class Select<T> {
 
     public List<T> list() {
         return this.createQuery().getResultList();
+    }
+
+    public ResultPage<T> page(int pageNumber, int pageSize) {
+        if (pageNumber < 1) {
+            throw new IllegalArgumentException("Page number must be 1 or higher: " + pageNumber);
+        }
+        if (pageSize < 1) {
+            throw new IllegalArgumentException("Page size must be 1 or higher: " + pageSize);
+        }
+
+        final TypedQuery<T> typedQuery = this.createQuery(false, true);
+
+        final List<T> resultList = typedQuery
+                .setFirstResult((pageNumber - 1) * pageSize)
+                .setMaxResults(pageSize)
+                .getResultList();
+
+        final long totalCount = this.count();
+
+        return new ResultPage<>(totalCount, pageNumber, pageSize, resultList);
+    }
+
+    public long count() {
+        final CriteriaBuilder cb = em.getCriteriaBuilder();
+        final CriteriaQuery<Long> q = cb.createQuery(Long.class);
+        final Root<T> root = q.from(entityClass);
+        final CriteriaQuery<Long> criteriaQuery = q.select(distinct ? cb.countDistinct(root) : cb.count(root));
+        applyWhere(criteriaQuery, cb, root);
+        return em.createQuery(criteriaQuery)
+                .getSingleResult();
     }
 
     private EntityGraph<T> createEntityGraph(List<Attribute<T, ?>> nodesToAdd) {
