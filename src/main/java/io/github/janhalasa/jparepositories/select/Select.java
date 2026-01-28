@@ -1,6 +1,7 @@
 package io.github.janhalasa.jparepositories.select;
 
 import io.github.janhalasa.jparepositories.ResultPage;
+import io.github.janhalasa.jparepositories.model.Fetcher;
 import io.github.janhalasa.jparepositories.model.OrderAttr;
 import io.github.janhalasa.jparepositories.model.OrderBy;
 import io.github.janhalasa.jparepositories.model.PredicateAndOrder;
@@ -39,6 +40,7 @@ public class Select<T> {
     private ResultGraph<T> resultGraph = null;
     private List<Attribute<T, ?>> nodesToFetch;
     private boolean nodesToFetchOnly = false;
+    private Fetcher<T> fetcher;
 
     public static <T> Select<T> from(Class<T> entityClass, EntityManager em) {
         return new Select<>(entityClass, em);
@@ -125,6 +127,11 @@ public class Select<T> {
         return this;
     }
 
+    public Select<T> fetch(Fetcher<T> fetcher) {
+        this.fetcher = fetcher;
+        return this;
+    }
+
     public Select<T> fetchOnly(List<Attribute<T, ?>> nodesToFetch) {
         if (this.resultGraph != null) {
             LOGGER.warn("Overriding previously defined result graph");
@@ -175,6 +182,11 @@ public class Select<T> {
 
         if (warnIfNoOrdering && (criteriaQuery.getOrderList() == null || criteriaQuery.getOrderList().isEmpty())) {
             LOGGER.warn("No ordering set. This may lead to unpredicable page results.");
+        }
+
+        if (applyFetch && this.fetcher != null) {
+            // The FetchCreator must be called before creating a TypedQuery, otherwise it has no effect.
+            fetcher.create(root);
         }
 
         final TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
