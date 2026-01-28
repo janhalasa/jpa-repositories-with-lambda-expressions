@@ -153,9 +153,9 @@ public class Select<T> {
     /**
      * Sets a specific list of attributes to be fetched in the query. This method disables fetching of EAGER attributes.
      *
-     * @param nodesToFetch the list of attributes represented by `Attribute<T, ?>` objects to be fetched. These attributes
+     * @param nodesToFetch the list of attributes represented by `Attribute&lt;T, ?&gt;` objects to be fetched. These attributes
      *                     define specific nodes in the entity graph to include in the fetch operation.
-     * @return the current instance of `Select<T>`, enabling method chaining.
+     * @return the current instance of `Select&lt;T&gt;`, enabling method chaining.
      */
     public Select<T> fetchOnly(List<Attribute<T, ?>> nodesToFetch) {
         if (this.resultGraph != null) {
@@ -175,9 +175,9 @@ public class Select<T> {
      * This method modifies the internal fetch configuration of the query.
      * It overrides any previously defined nodes to fetch or related result graph settings.
      *
-     * @param nodesToFetch the list of attributes to be fetched, represented by `Attribute<T, ?>` objects.
+     * @param nodesToFetch the list of attributes to be fetched, represented by `Attribute&lt;T, ?&gt;` objects.
      *                     These attributes define specific nodes in the entity graph to be fetched.
-     * @return the current instance of `Select<T>` for method chaining.
+     * @return the current instance of `Select&lt;T&gt;` for method chaining.
      */
     public Select<T> fetchExtra(List<Attribute<T, ?>> nodesToFetch) {
         if (this.resultGraph != null) {
