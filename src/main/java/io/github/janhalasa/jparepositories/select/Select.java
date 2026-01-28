@@ -115,6 +115,14 @@ public class Select<T> {
         return this;
     }
 
+    /**
+     * Configures the query to use a specific result graph for fetching data.
+     * This method overrides any previously defined result graph or nodes to fetch.
+     *
+     * @param resultGraph the {@code ResultGraph<T>} object that defines the entity graph to be used
+     *                    for fetching the query results.
+     * @return the current {@code Select<T>} instance, allowing for method chaining to further configure the query.
+     */
     public Select<T> fetch(ResultGraph<T> resultGraph) {
         if (this.resultGraph != null) {
             LOGGER.warn("Overriding previously defined result graph");
@@ -127,11 +135,28 @@ public class Select<T> {
         return this;
     }
 
+    /**
+     * Configures a custom fetch strategy for the query using the provided {@code Fetcher}.
+     * The {@code Fetcher} is a functional interface which facilitates the customization
+     * of fetched associations or attributes by modifying the root entity graph.
+     *
+     * @param fetcher the {@code Fetcher<T>} implementation that defines the fetch strategy
+     *                and specifies the attributes or relationships to be fetched
+     *                in the query results.
+     * @return the current instance of {@code Select<T>}, enabling method chaining for further query configuration.
+     */
     public Select<T> fetch(Fetcher<T> fetcher) {
         this.fetcher = fetcher;
         return this;
     }
 
+    /**
+     * Sets a specific list of attributes to be fetched in the query. This method disables fetching of EAGER attributes.
+     *
+     * @param nodesToFetch the list of attributes represented by `Attribute<T, ?>` objects to be fetched. These attributes
+     *                     define specific nodes in the entity graph to include in the fetch operation.
+     * @return the current instance of `Select<T>`, enabling method chaining.
+     */
     public Select<T> fetchOnly(List<Attribute<T, ?>> nodesToFetch) {
         if (this.resultGraph != null) {
             LOGGER.warn("Overriding previously defined result graph");
@@ -145,6 +170,15 @@ public class Select<T> {
         return this;
     }
 
+    /**
+     * Sets the list of attributes to be fetched in addition to EAGER associations.
+     * This method modifies the internal fetch configuration of the query.
+     * It overrides any previously defined nodes to fetch or related result graph settings.
+     *
+     * @param nodesToFetch the list of attributes to be fetched, represented by `Attribute<T, ?>` objects.
+     *                     These attributes define specific nodes in the entity graph to be fetched.
+     * @return the current instance of `Select<T>` for method chaining.
+     */
     public Select<T> fetchExtra(List<Attribute<T, ?>> nodesToFetch) {
         if (this.resultGraph != null) {
             LOGGER.warn("Overriding previously defined result graph");

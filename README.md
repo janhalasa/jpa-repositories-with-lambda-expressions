@@ -13,7 +13,7 @@ Add the library as a Maven dependency:
 <dependency>
     <artifactId>jpa-repositories-with-lambda-expressions</artifactId>
     <groupId>io.github.janhalasa</groupId>
-    <version>0.9.0</version>
+    <version>0.9.1</version>
 </dependency>
 ```
 
@@ -41,7 +41,14 @@ Useful API methods:
 * `T single()` Returns a single record or throws an Exception if none or more than one found.
 * `List<T> list()` Returns all records found.
 * `ResultPage<T> page(int pageNumber, int pageSize)` Returns the requested page of results and the total count
-* `long count()` Returns number of records matching given criteria. 
+* `long count()` Returns number of records matching given criteria.
+
+### Fetching associations
+Fetching of associations in JPA criteria API requires access to the `Root` object.
+The `Select` class allows few ways how to do it:
+* Using an entity graph with the `Select::fetch(ResultGraph<T> resultGraph)` method. To create a graph, one needs an `EntityManager`, it's API is hard to read, and it's not possible to define a graph deeper than 2.
+* Using the `Fetcher` class with `Select::fetch(Fetcher fetcher)` method. `Fetcher` is a functional interface. It provides `Root` object as a parameter, which can be used to fetch anything. It's easy to reuse it, and it doesn't need `EntityManager` to be created.
+* Using simple attributes of the root entity with methods `fetchOnly(List<Attribute<T, ?>> nodesToFetch)` and `fetchExtra(List<Attribute<T, ?>> nodesToFetch)`. This way is easy to use, but allows fetching only direct associations of the root entity.
 
 ## Repositories ##
 
