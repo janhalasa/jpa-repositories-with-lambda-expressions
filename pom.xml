@@ -7,9 +7,9 @@
 	<version>0.9.2-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>JPA repositories with lambda expressions</name>
-	<description>Lambda expression support for JPA (Java persistence API) Criteria API repositories</description>
-	<url>https://github.com/janhalasa/jpa-repositories-with-lambda-expressions</url>
+	<name>Pay by Square Java</name>
+	<description>Java library for generating payments QR codes used in Slovakia</description>
+	<url>https://github.com/janhalasa/pay-by-square-java</url>
 	<inceptionYear>2023</inceptionYear>
 	<developers>
 		<developer>
@@ -130,7 +130,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.5</version>
+				<version>3.2.8</version>
 				<executions>
 					<execution>
 						<id>sign-artifacts</id>
@@ -140,7 +140,6 @@
 						</goals>
 						<configuration>
 							<keyname>${gpg.keyname}</keyname>
-							<passphraseServerId>${gpg.keyname}</passphraseServerId>
 							<gpgArguments>
 								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>

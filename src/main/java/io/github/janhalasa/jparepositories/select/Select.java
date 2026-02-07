@@ -41,6 +41,8 @@ public class Select<T> {
     private List<Attribute<T, ?>> nodesToFetch;
     private boolean nodesToFetchOnly = false;
     private Fetcher<T> fetcher;
+    private Integer limit = null;
+    private Integer offset = null;
 
     public static <T> Select<T> from(Class<T> entityClass, EntityManager em) {
         return new Select<>(entityClass, em);
@@ -112,6 +114,22 @@ public class Select<T> {
 
     public Select<T> orderBy(List<OrderAttr<T>> orderAttrs) {
         this.orderAttrs = orderAttrs;
+        return this;
+    }
+
+    public Select<T> limit(int limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    public Select<T> offset(int limit) {
+        this.limit = limit;
+        return this;
+    }
+
+    public Select<T> limitAndOffset(int limit, int offset) {
+        this.limit = limit;
+        this.offset = offset;
         return this;
     }
 
@@ -224,6 +242,13 @@ public class Select<T> {
         }
 
         final TypedQuery<T> typedQuery = em.createQuery(criteriaQuery);
+
+        if (limit != null) {
+            typedQuery.setMaxResults(limit);
+        }
+        if (offset != null) {
+            typedQuery.setFirstResult(offset);
+        }
 
         if (distinct) {
             criteriaQuery.distinct(distinct);
