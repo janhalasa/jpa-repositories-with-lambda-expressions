@@ -4,7 +4,7 @@
 
 	<groupId>io.github.janhalasa</groupId>
 	<artifactId>jpa-repositories-with-lambda-expressions</artifactId>
-	<version>0.9.2</version>
+	<version>0.9.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Pay by Square Java</name>
@@ -46,7 +46,7 @@
 	<scm>
 		<connection>scm:git:https://github.com/janhalasa/jpa-repositories-with-lambda-expressions.git</connection>
 		<developerConnection>scm:git:https://github.com/janhalasa/jpa-repositories-with-lambda-expressions.git</developerConnection>
-		<tag>v0.9.2</tag>
+		<tag>HEAD</tag>
 		<url>https://github.com/janhalasa/jpa-repositories-with-lambda-expressions.git</url>
 	</scm>
 	
