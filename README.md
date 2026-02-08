@@ -5,6 +5,8 @@ Lambda expression support for JPA (Java persistence API) Criteria API repositori
 Basic Criteria API is hard to write, because its calls cannot be chained. This library solves the problem. 
 The resulting code is short, type safe and easy to read.
 
+If you like this library, please give it a star, so I know someone uses it.
+
 ## Usage ##
 
 Add the library as a Maven dependency:
