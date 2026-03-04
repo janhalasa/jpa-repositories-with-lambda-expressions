@@ -15,7 +15,7 @@ Add the library as a Maven dependency:
 <dependency>
     <artifactId>jpa-repositories-with-lambda-expressions</artifactId>
     <groupId>io.github.janhalasa</groupId>
-    <version>0.9.2</version>
+    <version>0.9.3</version>
 </dependency>
 ```
 
