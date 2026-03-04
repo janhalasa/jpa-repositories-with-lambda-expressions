@@ -211,10 +211,10 @@ public class Select<T> {
     }
 
     public TypedQuery<T> createQuery() {
-        return this.createQuery(true, false);
+        return this.createQuery(false);
     }
 
-    private TypedQuery<T> createQuery(boolean applyFetch, boolean warnIfNoOrdering) {
+    private TypedQuery<T> createQuery(boolean warnIfNoOrdering) {
         final CriteriaBuilder cb = em.getCriteriaBuilder();
         final CriteriaQuery<T> q = cb.createQuery(entityClass);
         final Root<T> root = q.from(entityClass);
@@ -236,7 +236,7 @@ public class Select<T> {
             LOGGER.warn("No ordering set. This may lead to unpredicable page results.");
         }
 
-        if (applyFetch && this.fetcher != null) {
+        if (this.fetcher != null) {
             // The FetchCreator must be called before creating a TypedQuery, otherwise it has no effect.
             fetcher.create(root);
         }
@@ -254,9 +254,7 @@ public class Select<T> {
             criteriaQuery.distinct(distinct);
         }
 
-        if (applyFetch) {
-            applyFetch(typedQuery);
-        }
+        applyFetch(typedQuery);
 
         return typedQuery;
     }
@@ -324,7 +322,7 @@ public class Select<T> {
             throw new IllegalArgumentException("Page size must be 1 or higher: " + pageSize);
         }
 
-        final TypedQuery<T> typedQuery = this.createQuery(false, true);
+        final TypedQuery<T> typedQuery = this.createQuery(true);
 
         final List<T> resultList = typedQuery
                 .setFirstResult((pageNumber - 1) * pageSize)
